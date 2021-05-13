@@ -1,0 +1,28 @@
+spring:
+  data:
+    mongodb:
+      user: test
+      password: passwordvalue
+      uri: mongodb://localhost:27017/Server
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 3600000
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: uri2235@gmail.com
+  password: oriol98_6cst
+  protocol: smtp
+  tls: true
+  properties.mail.smtp:
+    auth: true
+    starttls.enable: true
+    ssl.trust: stmp.gmail.com

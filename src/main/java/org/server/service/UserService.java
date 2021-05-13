@@ -1,11 +1,19 @@
 package org.server.service;
 
 
-import org.server.controller.exceptions.BadRequestException;
-import org.server.controller.exceptions.ServiceException;
+import org.server.entity.PasswordReset;
 import org.server.entity.User;
+import org.server.exceptions.BadCredentialsException;
+import org.server.exceptions.EmailAlreadyExistsException;
+import org.server.exceptions.EntityNotFound;
+import org.server.repository.PasswordResetRepository;
 import org.server.repository.UserRepository;
+import org.server.security.TokenProvider;
+import org.server.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,36 +27,41 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+   @Autowired
+   private PassowordResetService passowordResetService;
+
+    @Autowired
+    TokenProvider tokenProvider;
+
+
+    @Autowired
+    private PasswordResetRepository passwordResetRepository;
+
+
     public UserRepository crud(){
         return userRepository;
     }
 
-    public User matchPassword(String email, String password) {
+    public String login(String email, String password) throws BadCredentialsException {
+            try{
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            return tokenProvider.createToken(email, userRepository.findByEmail(email).get().getRoles());
+            } catch (AuthenticationException ex){
+                throw new BadCredentialsException();
+            }
 
-        Optional<User> u = userRepository.findByEmail(email);
-
-        if (!u.isPresent()) throw new ServiceException("User does not exists");
-
-        User user = u.get();
-
-        if (user.getPassword().equals(password))
-            return user;
-        else
-            throw new ServiceException("Password does not match");
     }
 
-    public User register(String username, String email, String password, String name, String surname, String nationality, LocalDate dateOfBirth) {
+    public User register(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address) throws EmailAlreadyExistsException {
 
-        List<User> uEmail = new ArrayList<>(); //= userRepository.findByEmail(email);
-        if (uEmail.size() > 0)
-            throw new BadRequestException("Email already exist");
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent())
+            throw new EmailAlreadyExistsException();
 
-
-        List<User> uUsername = new ArrayList<>();//userRepository.findByUsername(username);
-        if (uUsername.size() > 0)
-            throw new BadRequestException("Username already exists");
-
-        User nu = new User(username,password,email,name,surname,nationality,dateOfBirth);
+        User nu = new User(email, password, name, surname, dateOfBirth, gender, phoneNumber, address);
         userRepository.save(nu);
         return nu;
     }
@@ -56,5 +69,30 @@ public class UserService {
     public List<User> getUsers(){
         ArrayList<User> llista = (ArrayList<User>) userRepository.findAll();
         return llista;
+    }
+
+    public String generateResetToken(String email){
+
+        Optional<User> user = userRepository.findByEmail(email);
+        if(!user.isPresent()) throw new EntityNotFound();
+        return passowordResetService.generateResetPasswordToken(email);
+
+
+    }
+
+    public void resetPassword(String token, String password){
+        PasswordReset pr = passowordResetService.checkToken(token);
+        Optional<User> u = userRepository.findByEmail(pr.getEmail());
+        User user = u.get();
+        user.setPassword(password);
+        userRepository.save(user);
+        pr.deactivatePasswordReset();
+        passwordResetRepository.save(pr);
+
+    }
+
+    public User getCurrentUser(UserPrincipal userPrincipal){
+        return userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new EntityNotFound());
     }
 }

@@ -12,6 +12,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Data
 @Document
@@ -20,13 +22,19 @@ public class User implements Serializable {
     @Id
     private String _id;
 
-    @NotNull
-    @Size(min=2, max=18)
-    private String username;
 
     private String imageUrl;
 
     private Boolean emailVerified = false;
+
+    @NotNull
+    private String gender;
+
+    @NotNull
+    private String address;
+
+    @NotNull
+    private String phoneNumber;
 
     @NotNull
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -48,34 +56,36 @@ public class User implements Serializable {
     @Max(50)
     private  String surname;
 
-    @NotNull
-    private String nationality;
+    private boolean active;
 
-    @NotNull
-    private AuthProvider provider;
 
-    private String providerId;
+    List<Role> roles;
 
     public String getId() {
         return _id;
     }
 
-    public User(){ }
+    public User(){
+        active = false;
+        emailVerified = false;
+    }
 
-    public User(String username, String password, String email,String name, String surname, String nationality , LocalDate dateOfBirth ){
-        this.username = username;
+    public User(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address ){
+
         this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.email = email;
-        this.nationality = nationality;
+        this.emailVerified =  false;
+        this.active = false;
         this.name = name;
         this.surname = surname;
+        this.address = address;
+        this.setRoles(Arrays.asList(Role.ROLE_EXTRAORDINARY));
     }
 
-    //@JsonView (Views.Private.class)
-    public String getUsername(){
-        return username;
-    }
+
 
     public String getName() {
         return name;
@@ -84,6 +94,10 @@ public class User implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getSurname(){ return surname;}
+
+    public void setSutname(String surname){ this.surname = surname;}
 
     public String getEmail() {
         return email;
@@ -117,20 +131,23 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public AuthProvider getProvider() {
-        return provider;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setProvider(AuthProvider provider) {
-        this.provider = provider;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
-    public String getProviderId() {
-        return providerId;
-    }
+    public boolean isActive(){ return active; }
 
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
+    public void setActive(boolean active){ this.active = active; }
 
+    public String getGender(){ return gender; }
+
+    public void setGender(String gender){ this.gender = gender; }
+
+    public String getAddress(){ return address; }
+
+    public void setAddress(String address){ this.address = address; }
 }

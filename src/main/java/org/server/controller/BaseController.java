@@ -1,12 +1,9 @@
 package org.server.controller;
 
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.server.controller.exceptions.ControllerException;
+import org.server.exceptions.ControllerException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import java.io.IOException;
 
 
 public class BaseController {
