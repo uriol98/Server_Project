@@ -3,6 +3,7 @@ package org.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,7 +24,7 @@ public class User implements Serializable {
     private String _id;
 
 
-    private String imageUrl;
+    private Binary imageUrl;
 
     private Boolean emailVerified = false;
 
@@ -107,11 +108,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getImageUrl() {
+    public Binary getImage() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImage(Binary imageUrl) {
         this.imageUrl = imageUrl;
     }
 

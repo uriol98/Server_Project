@@ -1,13 +1,18 @@
 package org.server.service;
 
 
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.server.entity.PasswordReset;
 import org.server.entity.User;
+import org.server.entity.VerifyEmailEntity;
 import org.server.exceptions.BadCredentialsException;
 import org.server.exceptions.EmailAlreadyExistsException;
 import org.server.exceptions.EntityNotFound;
+import org.server.mail.EmailService;
 import org.server.repository.PasswordResetRepository;
 import org.server.repository.UserRepository;
+import org.server.repository.VerifyEmailRepository;
 import org.server.security.TokenProvider;
 import org.server.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +20,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +43,11 @@ public class UserService {
     @Autowired
     TokenProvider tokenProvider;
 
+    @Autowired
+    private VerifyEmailRepository verifyEmailRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     private PasswordResetRepository passwordResetRepository;
@@ -62,7 +74,10 @@ public class UserService {
             throw new EmailAlreadyExistsException();
 
         User nu = new User(email, password, name, surname, dateOfBirth, gender, phoneNumber, address);
+        VerifyEmailEntity verifyEmailEntity = new VerifyEmailEntity(email);
+        verifyEmailRepository.save(verifyEmailEntity);
         userRepository.save(nu);
+        emailService.sendSimpleMessageResetPassword(email,"test",verifyEmailEntity.getToken());
         return nu;
     }
 
@@ -75,7 +90,9 @@ public class UserService {
 
         Optional<User> user = userRepository.findByEmail(email);
         if(!user.isPresent()) throw new EntityNotFound();
-        return passowordResetService.generateResetPasswordToken(email);
+        String token = passowordResetService.generateResetPasswordToken(email);
+        emailService.sendSimpleMessageResetPassword(email,"Reset password",token);
+        return token;
 
 
     }
@@ -86,8 +103,7 @@ public class UserService {
         User user = u.get();
         user.setPassword(password);
         userRepository.save(user);
-        pr.deactivatePasswordReset();
-        passwordResetRepository.save(pr);
+        passwordResetRepository.delete(pr);
 
     }
 
@@ -95,4 +111,29 @@ public class UserService {
         return userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new EntityNotFound());
     }
+
+    public void verifyEmail(String token){
+
+        Optional<VerifyEmailEntity> vf = verifyEmailRepository.findByToken(token);
+        if(!vf.isPresent()) throw new EntityNotFound();
+
+        VerifyEmailEntity verifyEmailEntity = vf.get();
+        Optional<User> u = userRepository.findByEmail(verifyEmailEntity.getEmail());
+        User user = u.get();
+        user.setEmailVerified(true);
+        userRepository.save(user);
+        //verifyEmailRepository.delete(verifyEmailEntity);
+
+    }
+
+    public void addProfileImage( MultipartFile file, UserPrincipal userPrincipal) throws IOException {
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new EntityNotFound());
+        user.setImage(
+                new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+        userRepository.save(user);
+
+    }
+
 }

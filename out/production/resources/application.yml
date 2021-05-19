@@ -1,9 +1,15 @@
 spring:
   data:
     mongodb:
-      user: test
-      password: passwordvalue
-      uri: mongodb://localhost:27017/Server
+      user: sgbd
+      password: admin
+      uri: mongodb+srv://sgbd:admin@sgbd.zg5c1.mongodb.net/Server?retryWrites=true&w=majority
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+      enabled: true
 
   jpa:
     show-sql: true

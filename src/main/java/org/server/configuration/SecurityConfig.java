@@ -52,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/forget").permitAll()
                 .antMatchers("/auth/reset/{token}").permitAll()
                 .antMatchers("/auth/reset").permitAll()
+                .antMatchers("/users/verify/{token}").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

@@ -1,4 +1,7 @@
 package org.server.repository;
 
-public interface DocumentRepository {
+import org.server.entity.DocumentFiles;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface DocumentFilesRepository extends MongoRepository<DocumentFiles,String> {
 }
