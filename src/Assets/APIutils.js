@@ -32,7 +32,7 @@ export function getCurrentUser() {
         return Promise.reject("No access token set.");
     }
 
-    return request({
+    return requestAxios({
         url: API_BASE_URL + "/users/me",
         method: 'GET'
     });
@@ -51,7 +51,7 @@ export function login(loginRequest) {
 
 export function signup(signupRequest) {
 
-    return request({
+    return requestAxios({
         url: API_BASE_URL + "/auth/signup",
         method: 'POST',
         body: JSON.stringify(signupRequest)
@@ -69,7 +69,7 @@ export function checkTokenResetPassword(requestOptions ){
 
 export function forgetPassword(requestOptions ){
 
-    return request({
+    return requestAxios({
         url: API_BASE_URL + "/auth/forget",
         method: 'POST',
         body: JSON.stringify(requestOptions)
@@ -78,7 +78,7 @@ export function forgetPassword(requestOptions ){
 
 export function resetPassword(requestOptions, tokenReset ) {
 
-    return request({
+    return requestAxios({
         url: API_BASE_URL + "/auth/reset/" + tokenReset,
         method: 'POST',
         body: JSON.stringify(requestOptions)
@@ -89,7 +89,7 @@ export function resetPassword(requestOptions, tokenReset ) {
 
 export function verifyEmail( tokenVerify ) {
 
-    return request({
+    return requestAxios({
         url: API_BASE_URL + "/users/verify/" + tokenVerify,
         method: 'GET'
     });
@@ -97,19 +97,23 @@ export function verifyEmail( tokenVerify ) {
 
 // --------------------------- prova axios -------------
 
-const requestAxiosPost = (options) => {
+const requestAxios = (options) => {
 
 
+    let headers2 = {
+        'Content-Type': 'application/json',
+    };
     if(localStorage.getItem(ACCESS_TOKEN)) {
-        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+        headers2['Authorization'] = 'Bearer ' + localStorage.getItem(ACCESS_TOKEN);
     }
 
-
-    const defaults = {headers: headers};
-    options = Object.assign({}, defaults, options);
-    console.log(options.body);
-    let body = {};
-    return axios.post(options.url, options.body ,options.headers)
+    return axios({
+        method: options.method,
+        url: options.url,
+        data: options.body,
+        headers: {'Content-Type': headers2['Content-Type'],
+        'Authorization': headers2['Authorization']}
+    })
         .then((response) =>
              {
                 return  response.data;
@@ -122,14 +126,53 @@ const requestAxiosPost = (options) => {
 export function loginAxios(loginRequest) {
 
     localStorage.removeItem(ACCESS_TOKEN);
-    return requestAxiosPost({
+    return requestAxios({
         url: API_BASE_URL + "/auth/login",
-        body: loginRequest
+        body: loginRequest,
+        method: 'POST'
 
     });
 }
 
-export function uploadFile(file) {
 
+export function uploadFile(formData) {
 
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxiosFile({
+        url: API_BASE_URL + "/users/image",
+        method: 'POST',
+        body: formData
+    });
 }
+
+
+const requestAxiosFile = (options) => {
+
+
+    let headers2 = {
+        'Content-Type': 'multipart/form-data',
+    };
+    if(localStorage.getItem(ACCESS_TOKEN)) {
+        headers2['Authorization'] = 'Bearer ' + localStorage.getItem(ACCESS_TOKEN);
+    }
+    console.log(options);
+    return axios({
+        method: options.method,
+        url: options.url,
+        data: options.body,
+        headers: {
+            'Content-Type': headers2['Content-Type'],
+            'Authorization': headers2['Authorization'],
+            }
+    })
+        .then((response) =>
+        {
+            return  response.data;
+        }, (error) => {
+            return  Promise.reject(error);
+        } );
+
+};

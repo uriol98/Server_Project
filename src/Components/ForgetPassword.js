@@ -49,7 +49,7 @@ class ForgetPassword extends Component{
             console.log(email);
             forgetPassword(email).then(response => {
                 console.log("Email sent");
-
+                this.props.history.push("/");
             }).catch(error => {
                 console.log(error.message);
                 this.setState({error: "This email doesn't exists"})

@@ -36,6 +36,7 @@ class Header extends Component{
                                     <li>
                                         <NavLink to="/" onClick={this.props.onLogout}>Logout</NavLink>
                                     </li>
+
                                 </ul>
                             ): (
                                 <ul>

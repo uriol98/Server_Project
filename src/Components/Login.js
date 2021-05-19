@@ -79,14 +79,11 @@ class LoginForm extends Component{
         //const loginRequest = {email: this.state.email, password: this.state.password };
         const loginRequest = Object.assign({}, this.state);
         
-        login(loginRequest).then(response => {
+        loginAxios(loginRequest).then(response => {
             console.log(response);
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            Alert.success("You're successfully logged in!",{
-                position: 'top-right'});
-
            console.log("You're successfully logged in!");
-            this.props.authenticate();
+            this.props.refresh();
             this.props.history.push("/");
         }).catch(error => {
             this.setState({error: error.message});
@@ -101,6 +98,7 @@ class LoginForm extends Component{
 
             <div>
 
+                <br/>
                 { this.state.error !== '' && <span style={{color: "red"}}>{this.state.error}</span>}
 
                 <form className="mid-form" onSubmit={this.handleSubmit}>

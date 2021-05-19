@@ -7,7 +7,7 @@ import Register from './Components/Register';
 import Login from './Components/Login';
 import Profile from './Components/Profile';
 import { ACCESS_TOKEN } from './Assets/constants';
-import { getCurrentUser } from './Assets/APIutils';
+import { getCurrentUser, getCurrentUserAxios } from './Assets/APIutils';
 import PrivateRoute from './Assets/PrivateRoute';
 import ForgetPassword from './Components/ForgetPassword';
 import ResetPassword from './Components/ResetPassword';
@@ -25,7 +25,7 @@ class Router extends Component{
         }
         this.loadCurrentlyLoggedInUser = this.loadCurrentlyLoggedInUser.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
-        this.authenticate = this.authenticate.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     loadCurrentlyLoggedInUser() {
@@ -41,6 +41,7 @@ class Router extends Component{
             loading: false
           });
           console.log(response);
+          console.log("token: " + localStorage.getItem(ACCESS_TOKEN))
         }).catch(error => {
           this.setState({
             loading: false
@@ -57,7 +58,7 @@ class Router extends Component{
 
         }
 
-    authenticate () {
+    refresh () {
         this.loadCurrentlyLoggedInUser();
     }
 
@@ -72,7 +73,7 @@ class Router extends Component{
 
             <BrowserRouter>
 
-                <Header authenticated={this.state.authenticated} onLogout={this.handleLogout} />
+                <Header authenticated={this.state.authenticated} currentUser={this.state.currentUser} onLogout={this.handleLogout} />
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/home" component={Home} />
@@ -80,10 +81,10 @@ class Router extends Component{
                     <Route exact path="/verify/:token" component={VerifyEmail} />
                     <Route exact path="/reset/:token" component={ResetPassword} />
                     <Route exact path="/signup"  render={(props) => <Register authenticated={this.state.authenticated} {...props} />} />
-                    <PrivateRoute exact path="/profile" authenticated={this.state.authenticated} currentUser={this.state.currentUser}
+                    <PrivateRoute exact path="/profile" authenticated={this.state.authenticated} refresh={this.refresh} currentUser={this.state.currentUser}
                             component={Profile}/>
                    <Route path="/login"
-                                 render={(props) => <Login authenticated={this.state.authenticated} authenticate={this.authenticate} {...props} />}></Route>
+                                 render={(props) => <Login authenticated={this.state.authenticated} refresh={this.refresh} {...props} />}></Route>
                     <Route component={Error} />
 
                 </Switch>

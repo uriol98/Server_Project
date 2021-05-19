@@ -1,43 +1,49 @@
 import React, {Component} from 'react';
-import {login} from "../Assets/APIutils";
+import {login, uploadFile} from "../Assets/APIutils";
 import {ACCESS_TOKEN} from "../Assets/constants";
 import Alert from "react-s-alert";
 import {Link} from "react-router-dom";
+import UploadDocument from "./UploadDocument";
 
 
 class Profile extends Component{
 
     constructor(props) {
         super(props);
-        console.log(props);
-
-
-    }
-
-    componentDidMount(props) {
-        console.log(props);
-    }
-
-    fileChange = (event) =>{
 
     }
 
 
     render() {
+
+        let data = "";
+        if(this.props.currentUser.image !== null){
+
+            data = this.props.currentUser.imageUrl.data;
+        }
+
         return (
             <div id="content">
                 <div className="container">
                     <div className="center">
 
-                        {!this.props.currentUser.imageUrl ? (<p> not image</p>) : (<p>There is image </p>)}
+                        {!this.props.currentUser.imageUrl ?
+                            (
+
+                                <p> not image</p>
+                            ) :
+                            (<img src={`data:image/jpg;base64,${data}`}  width="200" />)}
                         <p><strong> Name: </strong>{this.props.currentUser.name}</p>
                         <p className="profile-email"><strong> Email: </strong>{this.props.currentUser.email}</p>
                         <p><strong>Phone number: </strong> {this.props.currentUser.phoneNumber}</p>
                         <p><strong>Gender: </strong> {this.props.currentUser.gender}</p>
                         <p><strong>Email is verified:</strong> {this.props.currentUser.emailVerified ? 'True' : 'False'}</p>
                         <br/>
-                        <input type="file" name="profileImage" onChange={this.fileChange}/>
+                        <br/>
+                        <UploadDocument {...this.props} />
+                        {
 
+                    }
                     </div>
                 </div>
             </div>
