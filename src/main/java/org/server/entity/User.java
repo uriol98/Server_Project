@@ -87,6 +87,14 @@ public class User implements Serializable {
     }
 
 
+    public void update( String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
     public String getName() {
         return name;

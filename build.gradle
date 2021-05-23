@@ -47,6 +47,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.mongodb:mongo-java-driver:3.11.2'
     compile 'org.springframework.boot:spring-boot-starter-mail:1.5.7.RELEASE'
+    compile 'com.itextpdf:itextpdf:5.5.10'
     compile 'org.mongodb:mongodb-driver-sync:3.11.2'
     compile group: 'org.apache.commons', name: 'commons-lang3'
     compileOnly 'org.projectlombok:lombok:1.18.6'

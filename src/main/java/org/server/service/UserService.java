@@ -1,8 +1,10 @@
 package org.server.service;
 
 
+import com.itextpdf.text.DocumentException;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
+import org.server.PDF.PDFGenerator;
 import org.server.entity.PasswordReset;
 import org.server.entity.User;
 import org.server.entity.VerifyEmailEntity;
@@ -22,6 +24,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -77,7 +80,7 @@ public class UserService {
         VerifyEmailEntity verifyEmailEntity = new VerifyEmailEntity(email);
         verifyEmailRepository.save(verifyEmailEntity);
         userRepository.save(nu);
-        emailService.sendSimpleMessageResetPassword(email,"test",verifyEmailEntity.getToken());
+        emailService.sendSimpleMessageVerificationEmail(email,"test",verifyEmailEntity.getToken());
         return nu;
     }
 
@@ -126,6 +129,13 @@ public class UserService {
 
     }
 
+    public void updateProfile(UserPrincipal userPrincipal, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new EntityNotFound());
+        user.update(name,surname,dateOfBirth,gender,phoneNumber,address);
+        userRepository.save(user);
+    }
+
     public void addProfileImage( MultipartFile file, UserPrincipal userPrincipal) throws IOException {
 
         User user = userRepository.findById(userPrincipal.getId())
@@ -136,4 +146,9 @@ public class UserService {
 
     }
 
+    public void generatePdf(UserPrincipal userPrincipal, HttpServletResponse response) throws IOException, DocumentException {
+        User user = getCurrentUser(userPrincipal);
+        PDFGenerator pdfGenerator = new PDFGenerator();
+        pdfGenerator.generatePDF(user, response);
+    }
 }

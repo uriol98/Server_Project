@@ -16,6 +16,7 @@ spring:
     hibernate:
       ddl-auto: update
 
+
 app:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
@@ -32,3 +33,4 @@ mail:
     auth: true
     starttls.enable: true
     ssl.trust: stmp.gmail.com
+

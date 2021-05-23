@@ -41,7 +41,20 @@ public class EmailServiceImpl implements EmailService{
             message.setFrom(NOREPLY_ADDRESS);
             message.setTo(to);
             message.setSubject(subject);
-            message.setText("Click on the link to reset your password: localhost:3000/reset/"+token);
+            message.setText("Click on the link to reset your password: https://finalproject-server.herokuapp.com/reset/"+token);
+
+            emailSender.send(message);
+        } catch (MailException exception) {
+            exception.printStackTrace();
+        }
+    }
+    public void sendSimpleMessageVerificationEmail(String to, String subject, String token){
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(NOREPLY_ADDRESS);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText("Click on the link to verify your email: https://finalproject-server.herokuapp.com/verify/"+token);
 
             emailSender.send(message);
         } catch (MailException exception) {

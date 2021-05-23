@@ -6,7 +6,12 @@ public interface EmailService {
                            String subject,
                            String text);
 
+
     void sendSimpleMessageResetPassword(String to,
                                     String subject,
                                     String token);
+
+    void sendSimpleMessageVerificationEmail(String to,
+                                            String subject,
+                                            String token);
 }

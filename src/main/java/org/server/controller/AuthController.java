@@ -2,6 +2,7 @@ package org.server.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.itextpdf.text.DocumentException;
 import org.server.entity.ApiResponse;
 import org.server.entity.PasswordReset;
 import org.server.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 
@@ -45,7 +47,7 @@ public class AuthController {
     PassowordResetService passowordResetService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws IOException, DocumentException {
 
 
             String token = userService.login(loginRequest.email, loginRequest.password);
