@@ -31,6 +31,9 @@ class Header extends Component{
                             { this.props.authenticated ? (
                                 <ul>
                                     <li>
+                                        <NavLink to="/files">Upload/Download files </NavLink>
+                                    </li>
+                                    <li>
                                         <NavLink to="/profile">Profile</NavLink>
                                     </li>
                                     <li>

@@ -13,6 +13,8 @@ import ForgetPassword from './Components/ForgetPassword';
 import ResetPassword from './Components/ResetPassword';
 import Error from './Components/Error';
 import VerifyEmail from './Components/VerifyEmail';
+import UpdateProfile from './Components/UpdateProfile';
+import FilesHandler from './Components/FilesHandler';
 
 class Router extends Component{
 
@@ -35,6 +37,7 @@ class Router extends Component{
 
      getCurrentUser()
         .then(response => {
+           response.dateOfBirth = response.dateOfBirth.replaceAll(/-/g,'/');
           this.setState({
             currentUser: response,
             authenticated: true,
@@ -83,6 +86,10 @@ class Router extends Component{
                     <Route exact path="/signup"  render={(props) => <Register authenticated={this.state.authenticated} {...props} />} />
                     <PrivateRoute exact path="/profile" authenticated={this.state.authenticated} refresh={this.refresh} currentUser={this.state.currentUser}
                             component={Profile}/>
+                      <PrivateRoute path="/files" authenticated={this.state.authenticated} currentUser={this.state.currentUser} component={FilesHandler} />
+
+                     <PrivateRoute exact path="/profile/update"  authenticated={this.state.authenticated} refresh={this.refresh} currentUser={this.state.currentUser}
+                        component={UpdateProfile}/>
                    <Route path="/login"
                                  render={(props) => <Login authenticated={this.state.authenticated} refresh={this.refresh} {...props} />}></Route>
                     <Route component={Error} />

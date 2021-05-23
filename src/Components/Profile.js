@@ -27,6 +27,9 @@ class Profile extends Component{
                 <div className="container">
                     <div className="center">
 
+                        <Link to="/profile/update" className="btn btn-primary"> Update Profile</Link>
+                        <br/>
+                        <br/>
                         {!this.props.currentUser.imageUrl ?
                             (
 
@@ -34,9 +37,11 @@ class Profile extends Component{
                             ) :
                             (<img src={`data:image/jpg;base64,${data}`}  width="200" />)}
                         <p><strong> Name: </strong>{this.props.currentUser.name}</p>
+                        <p><strong> Surname: </strong>{this.props.currentUser.surname}</p>
                         <p className="profile-email"><strong> Email: </strong>{this.props.currentUser.email}</p>
                         <p><strong>Phone number: </strong> {this.props.currentUser.phoneNumber}</p>
                         <p><strong>Gender: </strong> {this.props.currentUser.gender}</p>
+                        <p><strong>Address:</strong> {this.props.currentUser.address}</p>
                         <p><strong>Email is verified:</strong> {this.props.currentUser.emailVerified ? 'True' : 'False'}</p>
                         <br/>
                         <br/>
@@ -50,62 +55,4 @@ class Profile extends Component{
         );
     }
 }
-/*
-class UpdateProfile extends Component{
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            name: '',
-            surname: '',
-            password1: '',
-            password2: '',
-            gender: '',
-
-            error: {}
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleInputChange(event) {
-        const target = event.target;
-        const inputName = target.name;
-        const inputValue = target.value;
-
-        this.setState({
-            [inputName] : inputValue
-        });
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        const loginRequest = Object.assign({}, this.state);
-
-        login(loginRequest).then(response => {
-            localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            Alert.success("You're successfully logged in!",{
-                position: 'top-right'});
-
-            console.log("You're successfully logged in!");
-            this.props.authenticate();
-            this.props.history.push("/");
-        }).catch(error => {
-            this.setState({error: error.message});
-            console.log(error.message);
-            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
-        });
-
-    }
-
-    render(){
-        return (
-            <div> hello world</div>
-        );
-
-    }
-
-}
-*/
 export default Profile

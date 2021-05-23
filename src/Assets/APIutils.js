@@ -148,6 +148,41 @@ export function uploadFile(formData) {
     });
 }
 
+export function UpdateProfileRequest(updateRequest) {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxios({
+        url: API_BASE_URL + "/users/update",
+        method: 'POST',
+        body: updateRequest
+    });
+}
+
+export function GeneratePDF() {
+
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+
+    return axios({
+        method: 'GET',
+        url: API_BASE_URL + "/users/generatepdf",
+        responseType: 'blob',
+        headers: {'Content-Type': 'application/json',
+            'Authorization':  'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+            }
+    })
+        .then((response) =>
+        {
+                return response.data;
+        }, (error) => {
+            return  Promise.reject(error);
+        } );
+
+}
 
 const requestAxiosFile = (options) => {
 

@@ -16,33 +16,37 @@ class Register extends Component{
             errors: {}
         };
         this.keyPressFunc = this.keyPressFunc.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
 
     }
 
-   handleChange(field,event){
+   handleChange(event){
+       const target = event.target;
+       const inputName = target.name;
+       const inputValue = target.value;
         let fields = this.state.fields;
         let val = event.target.value;
-        if (field === "dateOfBirth"){
+        if (inputName === "dateOfBirth"){
 
-            if (val.length === 2) {
+            if (inputValue.length === 2) {
 
                 val += '/';
 
-            } else if (val.length === 5) {
+            } else if (inputValue.length === 5) {
 
                 val += '/';
 
             }
 
         }
-        fields[field] = val;
+        fields[inputName] = inputValue;
         this.setState({fields});
     }
 
     handleSubmit(e) {
 
         e.preventDefault();
-        console.log(this.state);
 
         if(this.handleValidation()) {
             let signupForm = {
@@ -67,6 +71,7 @@ class Register extends Component{
                 Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
             });
         }
+
     }
 
 
@@ -199,13 +204,13 @@ handleChangePhone = (phone) =>
                         <div id="content">
 
 
-                            <form className="mid-form" onSubmit={this.handleSubmit.bind(this)}>
+                            <form className="mid-form" onSubmit={this.handleSubmit}>
 
                                 <div className="form-group">
                                     <label htmlFor="name">Name</label>
                                     <input className="form-input mt-1 block w-full"
                                         size="30" type="text" name="name" value={this.state.fields["name"]}
-                                           onChange={this.handleChange.bind(this,"name")} placeholder = 'Ex: John' required/>
+                                           onChange={this.handleChange} placeholder = 'Ex: John' required/>
                                     <span style={{color: "red"}}>{this.state.errors["name"]}</span>
 
                                 </div>
@@ -213,7 +218,7 @@ handleChangePhone = (phone) =>
                                 <div className="form-group">
                                     <label  htmlFor="name">Surname</label>
                                     <input  size="50" type="text" name="surname" value={this.state.fields["surname"]}
-                                           onChange={this.handleChange.bind(this,"surname")} placeholder = 'Ex: Thompson' required />
+                                           onChange={this.handleChange} placeholder = 'Ex: Thompson' required />
                                     <span style={{color: "red"}}>{this.state.errors["surname"]}</span>
                                 </div>
 
@@ -221,7 +226,7 @@ handleChangePhone = (phone) =>
                                 <div className="form-group">
                                     <label htmlFor="name">Email</label>
                                     <input  size="50" type="text" name="email" value={this.state.fields["email"]}
-                                           onChange={this.handleChange.bind(this,"email")} placeholder = 'example@example.com' required />
+                                           onChange={this.handleChange} placeholder = 'example@example.com' required />
                                     <span style={{color: "red"}}>{this.state.errors["email"]}</span>
                                 </div>
 
@@ -229,7 +234,7 @@ handleChangePhone = (phone) =>
                                 <div className="form-group">
                                     <label htmlFor="name">Password</label>
                                     <input  type="password" size="30" name="password1" value={this.state.fields["password1"]}
-                                           onChange={this.handleChange.bind(this,"password1")} placeholder = 'Enter Password' required />
+                                           onChange={this.handleChange} placeholder = 'Enter Password' required />
                                     <span style={{color: "red"}}>{this.state.errors["password1"]}</span>
                                 </div>
 
@@ -237,13 +242,13 @@ handleChangePhone = (phone) =>
                                 <div className="form-group">
                                     <label htmlFor="name">Confirm Password</label>
                                     <input  type="password" size="30" name="password2" value={this.state.fields["password2"]}
-                                           onChange={this.handleChange.bind(this,"password2")} placeholder = 'Confirm password' required />
+                                           onChange={this.handleChange} placeholder = 'Confirm password' required />
                                     <span style={{color: "red"}}>{this.state.errors["password2"]}</span>
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="name">Gender</label>
-                                    <select value={this.state.fields["gender"]} defaultValue={'DEFAULT'} onChange={this.handleChange.bind(this,"gender")}
+                                    <select value={this.state.fields["gender"]} defaultValue={'DEFAULT'} onChange={this.handleChange}
                                             name="gender"  className="select-css">
                                         {/*<option value="" selected disabled hidden>Choose here</option>*/}
                                         <option value="Male">Male</option>
@@ -259,13 +264,13 @@ handleChangePhone = (phone) =>
                                     <label htmlFor="name">Date of birth</label>
                                     <input  name="dateOfBirth" type = "text"
                                            value={this.state.fields["dateOfBirth"]}  placeholder = 'Day / Month / Year'
-                                           onChange = {this.handleChange.bind(this,"dateOfBirth")} onKeyDown={this.keyPressFunc} required/>
+                                           onChange = {this.handleChange} onKeyDown={this.keyPressFunc} required/>
                                     <span style={{color: "red"}}>{this.state.errors["dateOfBirth"]}</span>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="name">Address</label>
                                     <input  type="text" size="50" name="address" value={this.state.fields["address"]}
-                                           onChange={this.handleChange.bind(this,"address")} placeholder = 'Street, Number, City, Postal Code, Country ' required />
+                                           onChange={this.handleChange} placeholder = 'Street, Number, City, Postal Code, Country ' required />
                                     <span style={{color: "red"}}>{this.state.errors["address"]}</span>
                                 </div>
 
