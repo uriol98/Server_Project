@@ -1,5 +1,7 @@
-import React, {Component} from "react";
+import React, {Component, useContext, useState} from "react";
 import {NavLink, Link} from "react-router-dom";
+import LanguageSelector from './LanguageSelector';
+import { Text, LanguageContext } from '../Assets/Languages/Language';
 
 class Header extends Component{
 
@@ -13,42 +15,50 @@ class Header extends Component{
                 <div className="center">
 
                     <nav id="menu">
-                        <ul>
-                            <li>
-                                <NavLink to="/home" activeClassName="active">Home </NavLink>
-                            </li>
-                            <li>
-                                Element2
-                            </li>
-                            <li>
-                                <NavLink to="/profile" >Profile </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/login" >Login | sign up</NavLink>
-                            </li>
-                        </ul>
+
 
                             { this.props.authenticated ? (
                                 <ul>
-                                    <li>
-                                        <NavLink to="/files">Upload/Download files </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/profile">Profile</NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/" onClick={this.props.onLogout}>Logout</NavLink>
-                                    </li>
 
+                                    { this.props.currentUser.roles[0] === "ROLE_ADMIN"
+                                    ? (
+                                        <React.Fragment>
+                                            <li>
+                                                <NavLink to ="/users"><Text tid="users" /> </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/documents"><Text tid="documents"/></NavLink>
+                                            </li>
+                                        </React.Fragment>) : (
+                                            <React.Fragment>
+                                                <li>
+                                                    <NavLink to="/files"><Text tid="uploadDownload" /> </NavLink>
+                                                </li>
+                                            </React.Fragment>
+                                        )
+
+                                    }
+                                    <li>
+                                        <NavLink to="/" > <Text tid="home" /> </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/profile"> <Text tid="profile" /> </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/" onClick={this.props.onLogout}> <Text tid="logout" /> </NavLink>
+                                    </li>
+                                    <li><LanguageSelector/></li>
                                 </ul>
                             ): (
                                 <ul>
+
                                     <li>
-                                        <NavLink to="/login">Login</NavLink>
+                                        <NavLink to="/login"><Text tid="login">Login</Text></NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/signup">Signup</NavLink>
+                                        <NavLink to="/signup"><Text tid="signup" /></NavLink>
                                     </li>
+                                    <li><LanguageSelector/></li>
                                 </ul>
                             )}
 

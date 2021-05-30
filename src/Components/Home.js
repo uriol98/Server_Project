@@ -5,7 +5,7 @@ class Home extends Component{
 
     render() {
         return (
-            <div id="home">
+            <div id="content">
                 <h1 > DEVELOPING APP</h1>
                 <img src={logo} alt="logo react" width="500" height="500"/>
 

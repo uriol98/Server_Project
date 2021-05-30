@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {checkTokenResetPassword, forgetPassword} from "../Assets/APIutils";
+import {Text} from "../Assets/Languages/Language";
 
 
 class ForgetPassword extends Component{
@@ -62,9 +63,9 @@ class ForgetPassword extends Component{
     render() {
         return (
             <div id="content">
-                <h2 > Have you forgotten your password?</h2>
+                <h2 > <Text tid="forgetPassword" /> </h2>
                 <br/>
-                <p> Enter your email and you will get a link to reset your password</p>
+                <p> <Text tid="textForgetPassword" /> </p>
                 <form className="mid-form" onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <input type="text" name="email" value={this.state.email} onChange={this.handleChange}  placeholder="Email"  required />
@@ -73,7 +74,7 @@ class ForgetPassword extends Component{
                     <br />
                     <br />
                     <div className="form-group">
-                        <button type="submit" className="btn btn-block btn-primary">Send email</button>
+                        <button type="submit" className="btn btn-block btn-primary"><Text tid="sendEmail" /> </button>
                     </div>
 
                 </form>

@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
 import Alert from 'react-s-alert';
 
 import {login, loginAxios} from '../Assets/APIutils';
 import {  ACCESS_TOKEN } from '../Assets/constants';
+import {LanguageContext, LanguageProvider, Text} from "../Assets/Languages/Language";
 
 
 class Login extends Component{
@@ -41,9 +42,10 @@ class Login extends Component{
         return (
 
             <div className="center">
-                <h1> Login</h1>
-                <LoginForm {...this.props} />
-
+                <div id="content">
+                    <h1> Login</h1>
+                    <LoginForm {...this.props} />
+                </div>
             </div>
         );
     }
@@ -93,11 +95,13 @@ class LoginForm extends Component{
 
     }
 
+    static contextType = LanguageContext;
+
     render(){
+        let {dictionary} = this.context;
         return (
 
-            <div>
-
+            <div >
                 <br/>
                 { this.state.error !== '' && <span style={{color: "red"}}>{this.state.error}</span>}
 
@@ -108,18 +112,19 @@ class LoginForm extends Component{
                     </div >
                     <br/>
                     <div>
-                        <label htmlFor="name">Password</label>
-                        <input type="password" name="password" value={this.state.password} placeholder="Password" onChange={this.handleInputChange} required />
+                        <label htmlFor="name"><Text tid="password" /></label>
+                        <input type="password" name="password" value={this.state.password} placeholder={dictionary.password} onChange={this.handleInputChange} required />
                     </div>
                     <br/>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-block btn-primary">Login</button>
+                        <button type="submit" className="btn btn-block btn-primary"><Text tid="login" /></button>
                     </div>
                 </form>
                 <br/>
 
-                <Link to="/forgetPassword"> Have you forgot you password?</Link>
-
+                <div className="center">
+                    <Link to="/forgetPassword"> <Text tid="forgetPassword" /></Link>
+                </div>
             </div>
         );
 

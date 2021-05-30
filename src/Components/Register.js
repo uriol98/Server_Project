@@ -5,9 +5,11 @@ import { signup } from '../Assets/APIutils';
 import Alert from 'react-s-alert';
 
 import validator from 'validator'
+import {LanguageContext, Text} from "../Assets/Languages/Language";
 
 class Register extends Component{
 
+    static contextType = LanguageContext;
 
     constructor(props) {
         super(props);
@@ -49,6 +51,7 @@ class Register extends Component{
         e.preventDefault();
 
         if(this.handleValidation()) {
+
             let signupForm = {
                 name: this.state.fields["name"],
                 surname: this.state.fields["surname"],
@@ -57,9 +60,13 @@ class Register extends Component{
                 gender: this.state.fields["gender"],
                 dateOfBirth: this.state.fields["dateOfBirth"],
                 address: this.state.fields["address"],
+                fieldOfStudy: this.state.fields["fieldOfStudy"],
+                university: this.state.fields["university"],
+                yearGraduation: this.state.fields["yearGraduation"],
                 phoneNumber: this.state.fields["phone"]
             };
 
+            console.log(signupForm);
             const signupRequest = Object.assign({}, signupForm);
             signup(signupRequest).then(response => {
                 console.log("You're successfully registered");
@@ -195,19 +202,20 @@ handleChangePhone = (phone) =>
 
     render(){
 
-
+        const selectOptions = ['male', 'female', 'other'];
+        let {dictionary} = this.context;
 
         return(
             <div>
 
                     <div className="center">
                         <div id="content">
-
+                            <h1><Text tid="signup" /> </h1>
 
                             <form className="mid-form" onSubmit={this.handleSubmit}>
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Name</label>
+                                    <label htmlFor="name"><Text tid="name" /></label>
                                     <input className="form-input mt-1 block w-full"
                                         size="30" type="text" name="name" value={this.state.fields["name"]}
                                            onChange={this.handleChange} placeholder = 'Ex: John' required/>
@@ -216,7 +224,7 @@ handleChangePhone = (phone) =>
                                 </div>
 
                                 <div className="form-group">
-                                    <label  htmlFor="name">Surname</label>
+                                    <label  htmlFor="name"><Text tid="surname" /></label>
                                     <input  size="50" type="text" name="surname" value={this.state.fields["surname"]}
                                            onChange={this.handleChange} placeholder = 'Ex: Thompson' required />
                                     <span style={{color: "red"}}>{this.state.errors["surname"]}</span>
@@ -232,28 +240,32 @@ handleChangePhone = (phone) =>
 
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Password</label>
+                                    <label htmlFor="name"><Text tid="password" /></label>
                                     <input  type="password" size="30" name="password1" value={this.state.fields["password1"]}
-                                           onChange={this.handleChange} placeholder = 'Enter Password' required />
+                                           onChange={this.handleChange} placeholder={dictionary.enterPassword} required />
                                     <span style={{color: "red"}}>{this.state.errors["password1"]}</span>
                                 </div>
 
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Confirm Password</label>
+                                    <label htmlFor="name"><Text tid="confirmPassword" /></label>
                                     <input  type="password" size="30" name="password2" value={this.state.fields["password2"]}
-                                           onChange={this.handleChange} placeholder = 'Confirm password' required />
+                                           onChange={this.handleChange} placeholder={dictionary.confirmPassword} required />
                                     <span style={{color: "red"}}>{this.state.errors["password2"]}</span>
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Gender</label>
+                                    <label htmlFor="name"><Text tid="gender" /></label>
                                     <select value={this.state.fields["gender"]} defaultValue={'DEFAULT'} onChange={this.handleChange}
                                             name="gender"  className="select-css">
-                                        {/*<option value="" selected disabled hidden>Choose here</option>*/}
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
+                                        {
+                                            selectOptions.map(option => (
+                                                <option key={option} value={option}>
+                                                    {dictionary[option]}
+                                                </option>
+                                            ))
+                                        }
+
                                     </select>
                                     <span style={{color: "red"}}>{this.state.errors["gender"]}</span>
                                 </div>
@@ -261,23 +273,43 @@ handleChangePhone = (phone) =>
                                 <br/>
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Date of birth</label>
+                                    <label htmlFor="name"><Text tid="dateOfBirth" /></label>
                                     <input  name="dateOfBirth" type = "text"
-                                           value={this.state.fields["dateOfBirth"]}  placeholder = 'Day / Month / Year'
+                                           value={this.state.fields["dateOfBirth"]}  placeholder ={dictionary.day+'/'+dictionary.month+'/'+dictionary.year}
                                            onChange = {this.handleChange} onKeyDown={this.keyPressFunc} required/>
                                     <span style={{color: "red"}}>{this.state.errors["dateOfBirth"]}</span>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="name">Address</label>
+                                    <label htmlFor="name"><Text tid="address" /></label>
                                     <input  type="text" size="50" name="address" value={this.state.fields["address"]}
-                                           onChange={this.handleChange} placeholder = 'Street, Number, City, Postal Code, Country ' required />
+                                           onChange={this.handleChange} placeholder = {dictionary.street+', '+dictionary.number+', '+dictionary.city+', '+dictionary.zipCode+', '+dictionary.country} required />
                                     <span style={{color: "red"}}>{this.state.errors["address"]}</span>
+                                </div>
+
+                                <div className="form-group">
+                                    <label  htmlFor="name"><Text tid="university" /></label>
+                                    <input  size="50" type="text" name="university" value={this.state.fields["university"]}
+                                            onChange={this.handleChange} placeholder = {dictionary.universityEx} required />
+                                </div>
+
+                                <div className="form-group">
+                                    <label  htmlFor="name"><Text tid="fieldOfStudy" /></label>
+                                    <input  size="50" type="text" name="fieldOfStudy" value={this.state.fields["fieldOfStudy"]}
+                                            onChange={this.handleChange} placeholder = {dictionary.fieldOfStudyEx} required />
+
+                                </div>
+
+                                <div className="form-group">
+                                    <label  htmlFor="name"><Text tid="yearGraduation" /></label>
+                                    <input  size="50" type="text" name="yearGraduation" value={this.state.fields["yearGraduation"]}
+                                            onChange={this.handleChange} placeholder ={dictionary.year}  />
+
                                 </div>
 
                                 <br/>
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Phone number</label>
+                                    <label htmlFor="name"><Text tid="phoneNumber" /></label>
                                     <PhoneInput
                                         type="text"
                                         name="phone"

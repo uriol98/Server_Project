@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import {Text} from "../Assets/Languages/Language";
 
 const Error = () => {
     return (
         <section id="content">
-            <h2 className="subheader">No s'ha trobat la pagina</h2>
-            <p> La pagina a la que intentes accedir no existeix en la web</p>
+            <h2 className="subheader"><Text tid="pageNotFound" /></h2>
+            <p> <Text tid="pageNotFoundText" /></p>
 
         </section>
     );

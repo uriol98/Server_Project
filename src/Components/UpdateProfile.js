@@ -5,9 +5,12 @@ import {  ACCESS_TOKEN } from '../Assets/constants';
 import {UpdateProfileRequest} from '../Assets/APIutils';
 import PhoneInput, {isValidPhoneNumber} from "react-phone-number-input";
 import validator from "validator";
+import {LanguageContext, Text} from "../Assets/Languages/Language";
 
 
 class UpdateProfile extends Component{
+
+    static contextType = LanguageContext;
 
     constructor(props) {
         super(props);
@@ -18,6 +21,9 @@ class UpdateProfile extends Component{
             phoneNumber: '',
             gender: '',
             dateOfBirth: '',
+            university: '',
+            fieldOfStudy: '',
+            yearGraduation: '',
             errors: {}
         };
 
@@ -34,6 +40,9 @@ class UpdateProfile extends Component{
             phoneNumber: this.props.currentUser.phoneNumber,
             gender: this.props.currentUser.gender,
             dateOfBirth: this.props.currentUser.dateOfBirth,
+            fieldOfStudy: this.props.currentUser.fieldOfStudy,
+            university: this.props.currentUser.university,
+            yearGraduation: this.props.currentUser.yearGraduation,
             errors: {}
         });
     }
@@ -71,7 +80,10 @@ class UpdateProfile extends Component{
                 gender: this.state["gender"],
                 dateOfBirth: this.state["dateOfBirth"],
                 address: this.state["address"],
-                phoneNumber: this.state["phone"]
+                phoneNumber: this.state["phone"],
+                fieldOfStudy: this.state["fieldOfStudy"],
+                university: this.state["university"],
+                yearGraduation: this.state["yearGraduation"]
             };
             console.log(updateForm);
            // const updateRequest = Object.assign({}, updateForm);
@@ -177,6 +189,9 @@ class UpdateProfile extends Component{
 
 
     render(){
+
+        const selectOptions = ['male', 'female', 'other'];
+        let {dictionary} = this.context;
         return (
             <div>
 
@@ -185,7 +200,7 @@ class UpdateProfile extends Component{
                         <form className="mid-form" onSubmit={this.handleSubmit}>
 
                             <div className="form-group">
-                                <label htmlFor="name">Name</label>
+                                <label htmlFor="name"><Text tid="name" /></label>
                                 <input className="form-input mt-1 block w-full"
                                        size="30" type="text" name="name" value={this.state.name}
 
@@ -194,7 +209,7 @@ class UpdateProfile extends Component{
                             </div>
 
                             <div className="form-group">
-                                <label  htmlFor="name">Surname</label>
+                                <label  htmlFor="name"><Text tid="surname" /></label>
                                 <input  size="50" type="text" name="surname" value={this.state.surname}
                                         onChange={this.handleChange}  required />
 
@@ -202,13 +217,16 @@ class UpdateProfile extends Component{
 
 
                             <div className="form-group">
-                                <label htmlFor="name">Gender</label>
+                                <label htmlFor="name"><Text tid="gender" /></label>
                                 <select value={this.state.gender}  onChange={this.handleChange}
                                         name="gender"  className="select-css">
-
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
+                                    {
+                                        selectOptions.map(option => (
+                                            <option key={option} value={option}>
+                                                {dictionary[option]}
+                                            </option>
+                                        ))
+                                    }
                                 </select>
 
                             </div>
@@ -216,7 +234,7 @@ class UpdateProfile extends Component{
                             <br/>
 
                             <div className="form-group">
-                                <label htmlFor="name">Date of birth</label>
+                                <label htmlFor="name"><Text tid="dateOfBirth" /></label>
                                 <input  name="dateOfBirth" type = "text"
 
                                         value={this.state.dateOfBirth}
@@ -226,16 +244,37 @@ class UpdateProfile extends Component{
 
 
                             <div className="form-group">
-                                <label htmlFor="name">Address</label>
+                                <label htmlFor="name"><Text tid="address" /></label>
                                 <input  type="text" size="50" name="address" value={this.state.address}
+                                        placeholder={dictionary.street+', '+dictionary.number+', '+dictionary.city+', '+dictionary.zipCode+', '+dictionary.country}
                                         onChange={this.handleChange}  required />
+
+                            </div>
+
+                            <div className="form-group">
+                                <label  htmlFor="name"><Text tid="university" /></label>
+                                <input  size="50" type="text" name="university" value={this.state.university}
+                                        onChange={this.handleChange} placeholder = {dictionary.universityEx} required />
+                            </div>
+
+                            <div className="form-group">
+                                <label  htmlFor="name"><Text tid="fieldOfStudy" /></label>
+                                <input  size="50" type="text" name="fieldOfStudy" value={this.state.fieldOfStudy}
+                                        onChange={this.handleChange} placeholder = {dictionary.fieldOfStudyEx} required />
+
+                            </div>
+
+                            <div className="form-group">
+                                <label  htmlFor="name"><Text tid="yearGraduation" /></label>
+                                <input  size="50" type="text" name="yearGraduation" value={this.state.yearGraduation}
+                                        onChange={this.handleChange} placeholder ={dictionary.year}  />
 
                             </div>
 
                             <br/>
 
                                 <div className="form-group">
-                                    <label htmlFor="name">Phone number</label>
+                                    <label htmlFor="name"><Text tid="phoneNumber" /></label>
                                     <PhoneInput
                                         type="text"
                                         name="phone"

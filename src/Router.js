@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch} from 'react-router-dom';
 import Home from './Components/Home';
-import User from './Components/User';
 import Header from './Components/Header';
 import Register from './Components/Register';
 import Login from './Components/Login';
@@ -15,6 +14,7 @@ import Error from './Components/Error';
 import VerifyEmail from './Components/VerifyEmail';
 import UpdateProfile from './Components/UpdateProfile';
 import FilesHandler from './Components/FilesHandler';
+import Users from './Components/Admin/Users';
 
 class Router extends Component{
 
@@ -84,6 +84,7 @@ class Router extends Component{
                     <Route exact path="/verify/:token" component={VerifyEmail} />
                     <Route exact path="/reset/:token" component={ResetPassword} />
                     <Route exact path="/signup"  render={(props) => <Register authenticated={this.state.authenticated} {...props} />} />
+                    <PrivateRoute exact path="/users" authenticated={this.state.authenticated} currentUser={this.state.currentUser} component={Users} />
                     <PrivateRoute exact path="/profile" authenticated={this.state.authenticated} refresh={this.refresh} currentUser={this.state.currentUser}
                             component={Profile}/>
                       <PrivateRoute path="/files" authenticated={this.state.authenticated} currentUser={this.state.currentUser} component={FilesHandler} />

@@ -34,13 +34,14 @@ body {
 #header {
     height: 120px;
     width: 100%;
+    right: 0;
     background: white;
     border-bottom: 1px solid #ccc;
     border-top: 5px solid #61dafb;
 }
 
 .center{
-    width: 75%;
+    width: 100%;
     margin: 0px auto;
 }
 
@@ -88,7 +89,7 @@ body {
 
 #menu ul{
     line-height: 85px;
-    width: 60%;
+    width: 85%;
     float:right;
 }
 
@@ -203,6 +204,34 @@ body {
 
 .btn-success{
     background: rgb(23, 150, 19);
+}
+
+.icons i {
+    color: #b5b3b3;
+    border: 1px solid #b5b3b3;
+    padding: 6px;
+    margin-left: 4px;
+    border-radius: 5px;
+    cursor: pointer
+}
+
+.activity-done {
+    font-weight: 600
+}
+
+.list-group li {
+    margin-bottom: 12px
+}
+
+.list-group-item {}
+
+.list li {
+    list-style: none;
+    padding: 10px;
+    border: none;
+    margin-top: 12px;
+    border-radius: 5px;
+    background: #fff
 }
 
 .btn-success:hover{
@@ -433,7 +462,7 @@ textarea{
     #menu,
     #menu ul{
         clear:both;
-        float:none;
+        float: right;
         width: 100%;
         margin: 0px;
         padding: 0px;
@@ -462,7 +491,7 @@ textarea{
     }
 }
 
-@media (max-width: 497px){
+@media (max-width: 1000px){
     #header{
         min-height: 130px;
         overflow:hidden;

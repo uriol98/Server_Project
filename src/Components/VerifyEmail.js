@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router";
 import {checkTokenResetPassword, verifyEmail} from "../Assets/APIutils";
+import {Text} from "../Assets/Languages/Language";
 
 class VerifyEmail extends Component{
 
@@ -21,8 +22,8 @@ class VerifyEmail extends Component{
         return (
 
             <div id="content">
-                <h1> Email Verified</h1>
-                <p > Your email has been verified succesfully </p>
+                <h1> <Text tid="emailVerified" /></h1>
+                <p > <Text tid="emailVerifiedText" /> </p>
             </div>
         );
     }

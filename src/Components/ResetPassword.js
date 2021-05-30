@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router";
 import {checkTokenResetPassword, resetPassword} from "../Assets/APIutils";
 import Alert from "react-s-alert";
+import {Text} from "../Assets/Languages/Language";
 
 
 class ResetPassword extends Component{
@@ -31,7 +32,7 @@ class ResetPassword extends Component{
     }
 
 
-    componentDidMount()
+    UNSAFE_componentWillMount()
      {
         const token = {token: this.props.match.params.token};
 
@@ -77,9 +78,9 @@ class ResetPassword extends Component{
     render() {
         return(
             <div id="content">
-                <h2 > Reset Password</h2>
+                <h2 > <Text tid="resetPassword" /></h2>
                 <br/>
-                <p> Please, enter a new password for your account</p>
+                <p> <Text tid="textResetPassword" /></p>
                 <form className="mid-form" onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <input type="password" name="password1" value={this.state.password1} onChange={this.handleChange}  placeholder="Enter a new password"  required />
@@ -93,7 +94,7 @@ class ResetPassword extends Component{
                     <br/>
                     <br />
                     <div className="form-group">
-                        <button type="submit" className="btn btn-block btn-primary">Reset password</button>
+                        <button type="submit" className="btn btn-block btn-primary"><Text tid="resetPassword" /></button>
                     </div>
 
                 </form>

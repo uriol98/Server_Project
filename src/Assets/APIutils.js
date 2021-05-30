@@ -51,6 +51,7 @@ export function login(loginRequest) {
 
 export function signup(signupRequest) {
 
+    localStorage.removeItem(ACCESS_TOKEN);
     return requestAxios({
         url: API_BASE_URL + "/auth/signup",
         method: 'POST',
@@ -135,17 +136,27 @@ export function loginAxios(loginRequest) {
 }
 
 
-export function uploadFile(formData) {
+export function uploadFile(formData, type) {
 
     if(!localStorage.getItem(ACCESS_TOKEN)) {
         return Promise.reject("No access token set.");
     }
 
-    return requestAxiosFile({
-        url: API_BASE_URL + "/users/image",
-        method: 'POST',
-        body: formData
-    });
+    if( type ==="image"){
+        return requestAxiosFile({
+            url: API_BASE_URL + "/users/image",
+            method: 'POST',
+            body: formData
+        });
+    }
+    else {
+        return requestAxiosFile({
+            url: API_BASE_URL + "/documents/add",
+            method: 'POST',
+            body: formData
+        });
+    }
+
 }
 
 export function UpdateProfileRequest(updateRequest) {
@@ -182,6 +193,17 @@ export function GeneratePDF() {
             return  Promise.reject(error);
         } );
 
+}
+
+export function getAllUsers() {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxios({
+        url: API_BASE_URL + "/users/",
+        method: 'GET'
+    });
 }
 
 const requestAxiosFile = (options) => {
