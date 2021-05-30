@@ -16,7 +16,6 @@ import org.server.repository.PasswordResetRepository;
 import org.server.repository.UserRepository;
 import org.server.repository.VerifyEmailRepository;
 import org.server.security.TokenProvider;
-import org.server.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -70,13 +70,13 @@ public class UserService {
 
     }
 
-    public User register(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address) throws EmailAlreadyExistsException {
+    public User register(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address,  String university, String fieldOfStudy, String yearGraduation) throws EmailAlreadyExistsException {
 
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent())
             throw new EmailAlreadyExistsException();
 
-        User nu = new User(email, password, name, surname, dateOfBirth, gender, phoneNumber, address);
+        User nu = new User(email, password, name, surname, dateOfBirth, gender, phoneNumber, address, university, fieldOfStudy, yearGraduation);
         VerifyEmailEntity verifyEmailEntity = new VerifyEmailEntity(email);
         verifyEmailRepository.save(verifyEmailEntity);
         userRepository.save(nu);
@@ -110,8 +110,9 @@ public class UserService {
 
     }
 
-    public User getCurrentUser(UserPrincipal userPrincipal){
-        return userRepository.findById(userPrincipal.getId())
+    public User getCurrentUser(HttpServletRequest req){
+        String username = tokenProvider.getUsername(tokenProvider.resolveToken(req));
+        return userRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFound());
     }
 
@@ -129,16 +130,16 @@ public class UserService {
 
     }
 
-    public void updateProfile(UserPrincipal userPrincipal, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
-        User user = userRepository.findById(userPrincipal.getId())
+    public void updateProfile(HttpServletRequest req, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address,  String university, String fieldOfStudy, String yearGraduation){
+        User user = userRepository.findByEmail(tokenProvider.getUsername(tokenProvider.resolveToken(req)))
                 .orElseThrow(() -> new EntityNotFound());
-        user.update(name,surname,dateOfBirth,gender,phoneNumber,address);
+        user.update(name,surname,dateOfBirth,gender,phoneNumber,address, university, fieldOfStudy, yearGraduation);
         userRepository.save(user);
     }
 
-    public void addProfileImage( MultipartFile file, UserPrincipal userPrincipal) throws IOException {
+    public void addProfileImage( MultipartFile file, HttpServletRequest req) throws IOException {
 
-        User user = userRepository.findById(userPrincipal.getId())
+        User user = userRepository.findByEmail(tokenProvider.getUsername(tokenProvider.resolveToken(req)))
                 .orElseThrow(() -> new EntityNotFound());
         user.setImage(
                 new Binary(BsonBinarySubType.BINARY, file.getBytes()));
@@ -146,9 +147,10 @@ public class UserService {
 
     }
 
-    public void generatePdf(UserPrincipal userPrincipal, HttpServletResponse response) throws IOException, DocumentException {
-        User user = getCurrentUser(userPrincipal);
+    public void generatePdf( HttpServletResponse response, HttpServletRequest req) throws IOException, DocumentException {
+        User user = getCurrentUser(req);
         PDFGenerator pdfGenerator = new PDFGenerator();
         pdfGenerator.generatePDF(user, response);
     }
+
 }

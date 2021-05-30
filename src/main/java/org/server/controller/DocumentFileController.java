@@ -3,6 +3,7 @@ package org.server.controller;
 import org.server.entity.DocumentFiles;
 import org.server.service.DocumentFilesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Collection;
 
 @Controller
 public class DocumentFileController {
@@ -21,6 +24,8 @@ public class DocumentFileController {
     @Autowired
     DocumentFilesService documentFilesService;
 
+
+    // REVISAR SI FA FALTA
     @GetMapping("/documents/{id}")
     @PreAuthorize("hasAnyRole('USER','EXTRAORDINARY')")
     public String getDocument(@PathVariable String id, Model model) {
@@ -32,8 +37,14 @@ public class DocumentFileController {
 
     @PostMapping("/documents/add")
     @PreAuthorize("hasAnyRole('USER','EXTRAORDINARY')")
-    public String addFile(@RequestParam("title") String title, @RequestParam("file") MultipartFile file, Model model) throws IOException {
-        String id = documentFilesService.addDocumentFile(title, file);
-        return "redirect:/photos/" + id;
+    public ResponseEntity<?> addFile(@RequestParam (name = "file") MultipartFile file, Model model, HttpServletRequest req) throws IOException {
+        documentFilesService.addDocumentFile(req, file);
+        return ResponseEntity.ok(new org.server.entity.ApiResponse(true, "Profile image updated"));
+    }
+
+    @GetMapping("/documents")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Collection<DocumentFiles> getDocuments(){
+        return documentFilesService.getAllDocuments();
     }
 }

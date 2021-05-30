@@ -26,7 +26,7 @@ public class TokenProvider {
 
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    UserPrincipal userPrincipal;
 
     @Autowired
     private AppProperties appProperties;
@@ -52,7 +52,7 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(getUsername(token));
+        UserDetails userDetails = userPrincipal.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

@@ -17,9 +17,15 @@ public class DocumentFiles {
 
     private Binary file;
 
-    public DocumentFiles(String title){
+    private String owner;
+
+    private DocumentType documentType;
+
+    public DocumentFiles(String title, DocumentType documentType, String owner){
         super();
         this.title = title;
+        this.documentType = documentType;
+        this.owner = owner;
     }
 
     public String getId() {
@@ -41,6 +47,10 @@ public class DocumentFiles {
     public Binary getFile(){
         return file;
     }
+
+    public DocumentType getDocumentType(){ return this.documentType;}
+
+    public String getOwner(){ return this.owner ;}
 
     public void setFile(Binary file){
         this.file = file;

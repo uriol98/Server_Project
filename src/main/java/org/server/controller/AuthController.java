@@ -61,7 +61,7 @@ public class AuthController {
 
         try{
            User result = userService.register(ru.email, passwordEncoder.encode(ru.password), ru.name, ru.surname,
-                   ru.dateOfBirth, ru.gender, ru.phoneNumber, ru.address);
+                   ru.dateOfBirth, ru.gender, ru.phoneNumber, ru.address, ru.university, ru.fieldOfStudy, ru.yearGraduation);
 
            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/me").buildAndExpand(result.get_id()).toUri();
             return ResponseEntity.created(location)
@@ -142,6 +142,12 @@ public class AuthController {
         public LocalDate dateOfBirth;
         @NotNull
         public String address;
+        @NotNull
+        public String university;
+        @NotNull
+        public  String fieldOfStudy;
+        @NotNull
+        public String yearGraduation;
         @NotNull
         public String phoneNumber;
     }

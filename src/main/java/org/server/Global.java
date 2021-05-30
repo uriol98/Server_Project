@@ -1,17 +1,16 @@
 package org.server;
 
 import io.minio.MinioClient;
+import org.server.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 @Service
 public class Global {
@@ -19,8 +18,13 @@ public class Global {
 
     private MinioClient minioClient;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private Logger logger = LoggerFactory.getLogger(Global.class);
 
+    @Autowired
+    UserRepository userRepository;
 
 
     @Value("${todospring.minio.url:}")
@@ -61,6 +65,13 @@ public class Global {
         if (BASE_URL == null) BASE_URL = "http://localhost";
         BASE_URL += ":" + BASE_PORT;
 
+        /*
+        LocalDate localDate = LocalDate.of(1998,4,23);
+        User user = new User("admin@admin.com", passwordEncoder.encode("admin"), "Oriol", "Canet", localDate, "Male", "+34616602098", "Address");
+        user.setEmailVerified(true);
+        user.setRoles(Arrays.asList(Role.ROLE_ADMIN));
+        userRepository.save(user);
+*/
 
     }
 

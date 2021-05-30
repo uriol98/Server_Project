@@ -1,9 +1,9 @@
 package org.server.configuration;
 
 
-import org.server.security.CustomUserDetailsService;
 import org.server.security.TokenFIlterConfigurer;
 import org.server.security.TokenProvider;
+import org.server.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +26,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+   @Autowired
+   private UserPrincipal userPrincipal;
 
 
     @Autowired

@@ -50,6 +50,15 @@ public class User implements Serializable {
     private String email;
 
     @NotNull
+    private String university;
+
+    @NotNull
+    private String fieldOfStudy;
+
+    @NotNull
+    private int yearGraduation;
+
+    @NotNull
     @Max(20)
     private  String name;
 
@@ -71,7 +80,7 @@ public class User implements Serializable {
         emailVerified = false;
     }
 
-    public User(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address ){
+    public User(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address, String university, String fieldOfStudy, String yearGraduation ){
 
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -84,16 +93,24 @@ public class User implements Serializable {
         this.surname = surname;
         this.address = address;
         this.setRoles(Arrays.asList(Role.ROLE_EXTRAORDINARY));
+        this.university = university;
+        this.fieldOfStudy = fieldOfStudy;
+        if(yearGraduation == "") this.yearGraduation = 0;
+        else this.yearGraduation = Integer.parseInt(yearGraduation);
     }
 
 
-    public void update( String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
+    public void update( String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address, String university, String fieldOfStudy, String yearGraduation){
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.university = university;
+        this.fieldOfStudy = fieldOfStudy;
+        if(yearGraduation == "") this.yearGraduation = 0;
+        else this.yearGraduation = Integer.parseInt(yearGraduation);
     }
 
     public String getName() {
@@ -111,6 +128,18 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
+
+    public String getUniversity(){ return university;}
+
+    public void setUniversity(String university){ this.university = university;}
+
+    public String getFieldOfStudy(){ return fieldOfStudy;}
+
+    public void setFieldOfStudy(String fieldOfStudy){ this.university = fieldOfStudy;}
+
+    public int getYearGraduation(){ return yearGraduation;}
+
+    public void setYearGraduation(int yearGraduation) { this.yearGraduation = yearGraduation;}
 
     public void setEmail(String email) {
         this.email = email;
