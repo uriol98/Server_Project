@@ -6,8 +6,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-/*import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;*/
+
 
 @Service("EmailService")
 public class EmailServiceImpl implements EmailService{
@@ -41,7 +40,10 @@ public class EmailServiceImpl implements EmailService{
             message.setFrom(NOREPLY_ADDRESS);
             message.setTo(to);
             message.setSubject(subject);
-            message.setText("Click on the link to reset your password: https://finalproject-server.herokuapp.com/reset/"+token);
+            String newLine = System.getProperty("line.separator");
+            String textEnglish = "Click on the link to reset your password: https://final-project-148c6.web.app/reset/";
+            String textPolish = "Kliknij link, aby zresetować hasło: https://final-project-148c6.web.app/reset/";
+            message.setText(textPolish+token+newLine+textEnglish+token);
 
             emailSender.send(message);
         } catch (MailException exception) {
@@ -54,12 +56,30 @@ public class EmailServiceImpl implements EmailService{
             message.setFrom(NOREPLY_ADDRESS);
             message.setTo(to);
             message.setSubject(subject);
-            message.setText("Click on the link to verify your email: https://finalproject-server.herokuapp.com/verify/"+token);
-
+            String newLine = System.getProperty("line.separator");
+            String textEnglish = "Click on the link to verify your email: https://final-project-148c6.web.app/verify/";
+            String textPolish = "Kliknij link, aby zweryfikować swój adres e-mail: https://final-project-148c6.web.app/verify/";
+            message.setText(textPolish+token+newLine+textEnglish+token);
             emailSender.send(message);
         } catch (MailException exception) {
             exception.printStackTrace();
         }
+    }
+
+   public void sendSimpleMessageRequestAnswer(String to, String subject){
+       try {
+           SimpleMailMessage message = new SimpleMailMessage();
+           message.setFrom(NOREPLY_ADDRESS);
+           message.setTo(to);
+           message.setSubject(subject);
+           String newLine = System.getProperty("line.separator");
+           String textEnglish = "Click on the link to verify your email: https://final-project-148c6.web.app/verify/";
+           String textPolish = "Kliknij link, aby zweryfikować swój adres e-mail: https://final-project-148c6.web.app/verify/";
+           message.setText(textPolish+newLine+textEnglish);
+           emailSender.send(message);
+       } catch (MailException exception) {
+           exception.printStackTrace();
+       }
     }
 
 }

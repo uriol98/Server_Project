@@ -1,6 +1,9 @@
 package org.server;
 
 import io.minio.MinioClient;
+import org.server.entity.Role;
+import org.server.entity.User;
+import org.server.entity.UserState;
 import org.server.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
 
 @Service
 public class Global {
@@ -65,10 +70,11 @@ public class Global {
         if (BASE_URL == null) BASE_URL = "http://localhost";
         BASE_URL += ":" + BASE_PORT;
 
-        /*
+/*
         LocalDate localDate = LocalDate.of(1998,4,23);
-        User user = new User("admin@admin.com", passwordEncoder.encode("admin"), "Oriol", "Canet", localDate, "Male", "+34616602098", "Address");
+        User user = new User("admin@admin.com", passwordEncoder.encode("admin"), "Oriol", "Canet", localDate, "Male", "+34616602098", "Address","AGH","Computer Engineering","2021");
         user.setEmailVerified(true);
+        user.setState(UserState.ACCEPTED);
         user.setRoles(Arrays.asList(Role.ROLE_ADMIN));
         userRepository.save(user);
 */

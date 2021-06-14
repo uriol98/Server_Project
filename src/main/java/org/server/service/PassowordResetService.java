@@ -7,6 +7,7 @@ import org.server.exceptions.InvalidTokenException;
 import org.server.repository.PasswordResetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class PassowordResetService {
         return passwordResetRepository;
     }
 
+    @Transactional
     public String generateResetPasswordToken(String email){
 
         PasswordReset passwordReset = new PasswordReset(email);
@@ -28,6 +30,7 @@ public class PassowordResetService {
         return passwordReset.getToken();
     }
 
+    @Transactional
     public PasswordReset  checkToken(String token){
         Optional<PasswordReset> pr =  passwordResetRepository.findByToken(token);
         if (!pr.isPresent()) throw new EntityNotFound();

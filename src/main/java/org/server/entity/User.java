@@ -49,14 +49,6 @@ public class User implements Serializable {
     @NotNull
     private String email;
 
-    @NotNull
-    private String university;
-
-    @NotNull
-    private String fieldOfStudy;
-
-    @NotNull
-    private int yearGraduation;
 
     @NotNull
     @Max(20)
@@ -66,8 +58,13 @@ public class User implements Serializable {
     @Max(50)
     private  String surname;
 
-    private boolean active;
+    private String numberMembership;
 
+    private String numberDocumentMember;
+
+    private UserState state;
+
+    private String dateAcceptance;
 
     List<Role> roles;
 
@@ -76,11 +73,11 @@ public class User implements Serializable {
     }
 
     public User(){
-        active = false;
+        state = UserState.NEW;
         emailVerified = false;
     }
 
-    public User(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address, String university, String fieldOfStudy, String yearGraduation ){
+    public User(String email, String password, String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
 
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -88,30 +85,38 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.emailVerified =  false;
-        this.active = false;
+        this.state = UserState.NEW;
         this.name = name;
         this.surname = surname;
         this.address = address;
-        this.setRoles(Arrays.asList(Role.ROLE_EXTRAORDINARY));
-        this.university = university;
-        this.fieldOfStudy = fieldOfStudy;
-        if(yearGraduation == "") this.yearGraduation = 0;
-        else this.yearGraduation = Integer.parseInt(yearGraduation);
+        this.setRoles(Arrays.asList(Role.ROLE_NEW));
+        this.numberDocumentMember = null;
+        this.numberMembership = null;
+        this.dateAcceptance = "";
+
     }
 
 
-    public void update( String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address, String university, String fieldOfStudy, String yearGraduation){
+    public void update( String name, String surname, LocalDate dateOfBirth, String gender, String phoneNumber, String address){
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.university = university;
-        this.fieldOfStudy = fieldOfStudy;
-        if(yearGraduation == "") this.yearGraduation = 0;
-        else this.yearGraduation = Integer.parseInt(yearGraduation);
+
     }
+
+    public void preAccept (String numberMembership, String numberDocumentMember, String dateAcceptance){
+        this.numberMembership = numberMembership;
+        this.numberDocumentMember = numberDocumentMember;
+        this.dateAcceptance = dateAcceptance;
+
+    }
+
+    public void accept(Role role){
+        this.roles.clear();
+        this.setRoles(Arrays.asList(role)); }
 
     public String getName() {
         return name;
@@ -129,17 +134,6 @@ public class User implements Serializable {
         return email;
     }
 
-    public String getUniversity(){ return university;}
-
-    public void setUniversity(String university){ this.university = university;}
-
-    public String getFieldOfStudy(){ return fieldOfStudy;}
-
-    public void setFieldOfStudy(String fieldOfStudy){ this.university = fieldOfStudy;}
-
-    public int getYearGraduation(){ return yearGraduation;}
-
-    public void setYearGraduation(int yearGraduation) { this.yearGraduation = yearGraduation;}
 
     public void setEmail(String email) {
         this.email = email;
@@ -177,13 +171,19 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
-    public boolean isActive(){ return active; }
+    public UserState getState(){ return state; }
 
-    public void setActive(boolean active){ this.active = active; }
+    public void setActive(UserState userState){ this.state = userState; }
 
     public String getGender(){ return gender; }
 
     public void setGender(String gender){ this.gender = gender; }
+
+    public String getNumberMembership(){ return numberMembership;}
+
+    public String getNumberDocumentMember() { return numberDocumentMember;}
+
+    public String getDateAcceptance() { return  dateAcceptance; }
 
     public String getAddress(){ return address; }
 

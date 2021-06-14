@@ -14,4 +14,9 @@ public interface EmailService {
     void sendSimpleMessageVerificationEmail(String to,
                                             String subject,
                                             String token);
+
+
+    void sendSimpleMessageRequestAnswer(String to,
+                                            String subject);
 }
+
