@@ -19,7 +19,7 @@ public class PDFGenerator {
 
     public void generateMembershipPDF(User user, MembershipForm membershipForm, HttpServletResponse response) throws FileNotFoundException, IOException,DocumentException {
 
-        PdfReader reader = new PdfReader("\\pdf\\pdf_membership_pl_part1.pdf");
+        PdfReader reader = new PdfReader("/pdf/pdf_membership_pl_part1.pdf");
         PdfStamper stamper = new PdfStamper(reader, response.getOutputStream());
         AcroFields form = stamper.getAcroFields();
         // ADD fields
