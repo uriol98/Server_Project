@@ -46,7 +46,7 @@ public class PDFGenerator {
         form.setField("gradeOfSpeciality",membershipForm.getGradeOfSpeciality());
         form.setField("yearSpeciality",membershipForm.getYearSpeciality());
         form.setField("specialInterestsPsychology",membershipForm.getSpecialInterestsPsychology());
-        form.setField("dateCreation",date);
+        form.setField("dateCreation2",date);
         stamper.setFormFlattening(true);
         stamper.close();
         reader.close();
@@ -56,7 +56,7 @@ public class PDFGenerator {
                                   String numberMembership, String numberDocumentHeadSociety, String numberDocumentMember) throws IOException, DocumentException {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PdfReader reader = new PdfReader("\\pdf\\pdf_membership_pl_part2.pdf");
+        PdfReader reader = new PdfReader("/pdf/pdf_membership_pl_part2.pdf");
         PdfStamper stamper = new PdfStamper(reader, stream);
         AcroFields form = stamper.getAcroFields();
         form.setField("surname", surname);
@@ -78,7 +78,7 @@ public class PDFGenerator {
                                       String numberDocumentHeadSociety, String numberDocumentMember) throws IOException, DocumentException {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PdfReader reader = new PdfReader("\\pdf\\membership_confirmation_pl.pdf");
+        PdfReader reader = new PdfReader("/pdf/membership_confirmation_pl.pdf");
         PdfStamper stamper = new PdfStamper(reader, stream);
         AcroFields form = stamper.getAcroFields();
         form.setField("surname", surname);
