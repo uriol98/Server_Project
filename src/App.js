@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './Assets/css/Style.css';
 
 import Router from './Router';
@@ -8,9 +8,11 @@ import {LanguageProvider} from "./Assets/Languages/Language";
 function App() {
   return (
       <LanguageProvider>
-    <div className="App">
-        <Router />
-    </div>
+
+          <div className="App">
+            <Router />
+          </div>
+
       </LanguageProvider>
   );
 }

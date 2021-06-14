@@ -5,11 +5,14 @@ import Alert from "react-s-alert";
 import {Link} from "react-router-dom";
 import UploadDocument from "./UploadDocument";
 import Table from 'react-bootstrap/Table';
-import {Text} from "../Assets/Languages/Language";
+import {LanguageContext, Text} from "../Assets/Languages/Language";
+import {BackButton} from "../Assets/BackButton";
 
 
 
 class Profile extends Component{
+
+    static contextType = LanguageContext;
 
     constructor(props) {
         super(props);
@@ -19,6 +22,7 @@ class Profile extends Component{
 
     render() {
 
+        let {dictionary} = this.context;
         let data = "";
         if(this.props.currentUser.image !== null){
 
@@ -28,13 +32,17 @@ class Profile extends Component{
         return (
             <div id="content">
                 <br/>
+                <BackButton/>
+                <br/>
                 <h1> <Text tid="profile" /></h1>
                 <br/>
                 <br/>
 
                     <div className="center">
 
-                        <Link to="/profile/update" className="btn btn-primary"> <Text tid="updateProfile" /></Link>
+                        <p><strong><Text tid="upload" /> <Text tid="profileImage" /> </strong></p>
+                        <UploadDocument {...this.props} type="image" />
+
                         <br/>
                         <br/>
                         <Table>
@@ -56,21 +64,19 @@ class Profile extends Component{
                                     <p><strong><Text tid="phoneNumber" />: </strong> {this.props.currentUser.phoneNumber}</p>
                                     <p><strong><Text tid="gender" />: </strong> {this.props.currentUser.gender}</p>
                                     <p><strong><Text tid="address" />:</strong> {this.props.currentUser.address}</p>
-                                    <p><strong><Text tid="emailVerified" />:</strong> {this.props.currentUser.emailVerified ? 'True' : 'False'}</p>
-                                    <p><strong><Text tid="university" />: </strong>{this.props.currentUser.university} </p>
-                                    <p><strong><Text tid="fieldOfStudy" />: </strong>{this.props.currentUser.fieldOfStudy} </p>
-                                    <p><strong><Text tid="yearGraduation" />: </strong>{this.props.currentUser.yearGraduation}</p>
+                                    <p><strong><Text tid="emailVerified" />:</strong> {this.props.currentUser.emailVerified ? dictionary["true"] : dictionary["false"]}</p>
+                                    <p><strong>State: </strong>{this.props.currentUser.state}</p>
+                                    <p><Link to="/changeEmail" > <Text tid="changeEmail" /></Link></p>
+                                    <p><Link to="/changePassword" > <Text tid="changePassword" /></Link></p>
                                 </td>
                             </tr>
                             </tbody>
                         </Table>
                         <br/>
                         <br/>
-                        <p><strong><Text tid="upload" /> <Text tid="profileImage" /> </strong></p>
-                        <UploadDocument {...this.props} />
-                        {
 
-                    }
+                        <Link to="/profile/update" className="btn btn-primary"> <Text tid="updateProfile" /></Link>
+
                     </div>
 
             </div>

@@ -1,14 +1,14 @@
-import React, {Component, useContext} from 'react';
+import React, {Component} from 'react';
 import {Link, Redirect} from "react-router-dom";
-import axios from "axios";
 import Alert from 'react-s-alert';
 
-import {login, loginAxios} from '../Assets/APIutils';
+import { loginAxios} from '../Assets/APIutils';
 import {  ACCESS_TOKEN } from '../Assets/constants';
-import {LanguageContext, LanguageProvider, Text} from "../Assets/Languages/Language";
+import {LanguageContext,  Text} from "../Assets/Languages/Language";
 
 
 class Login extends Component{
+
 
 
 
@@ -54,6 +54,8 @@ class Login extends Component{
 
 class LoginForm extends Component{
 
+    static contextType = LanguageContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -78,19 +80,17 @@ class LoginForm extends Component{
     handleSubmit(event) {
         event.preventDefault();
 
-        //const loginRequest = {email: this.state.email, password: this.state.password };
         const loginRequest = Object.assign({}, this.state);
-        
+        let {dictionary} = this.context;
         loginAxios(loginRequest).then(response => {
-            console.log(response);
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-           console.log("You're successfully logged in!");
+            Alert.success(dictionary["loginText"]);
             this.props.refresh();
             this.props.history.push("/");
         }).catch(error => {
-            this.setState({error: error.message});
-            console.log(error.message);
-            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+            console.log(error.response.data.message);
+            this.setState({error: error.response.data.message});
+            Alert.error(error.response.data.message);
         });
 
     }
@@ -103,9 +103,8 @@ class LoginForm extends Component{
 
             <div >
                 <br/>
-                { this.state.error !== '' && <span style={{color: "red"}}>{this.state.error}</span>}
-
                 <form className="mid-form" onSubmit={this.handleSubmit}>
+                    { this.state.error !== '' && <span style={{color: "red"}}>{this.state.error}</span>}
                     <div className="form-group">
                         <label htmlFor="name">Email</label>
                         <input type="text" name="email" value={this.state.email} placeholder="Email" onChange={this.handleInputChange} required />

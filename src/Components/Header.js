@@ -11,7 +11,7 @@ class Header extends Component{
 
 
         return (
-            <header className="header">
+            <header id="header">
                 <div className="center">
 
                     <nav id="menu">
@@ -27,12 +27,12 @@ class Header extends Component{
                                                 <NavLink to ="/users"><Text tid="users" /> </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/documents"><Text tid="documents"/></NavLink>
+                                                <NavLink to="/requests"><Text tid="requests"/></NavLink>
                                             </li>
                                         </React.Fragment>) : (
                                             <React.Fragment>
                                                 <li>
-                                                    <NavLink to="/files"><Text tid="uploadDownload" /> </NavLink>
+                                                    <NavLink to="/files"><Text tid="membership" /> </NavLink>
                                                 </li>
                                             </React.Fragment>
                                         )

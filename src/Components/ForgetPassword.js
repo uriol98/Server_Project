@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {checkTokenResetPassword, forgetPassword} from "../Assets/APIutils";
-import {Text} from "../Assets/Languages/Language";
-
+import {LanguageContext, Text} from "../Assets/Languages/Language";
+import Alert from 'react-s-alert';
 
 class ForgetPassword extends Component{
+
+
+    static contextType = LanguageContext;
 
     constructor() {
         super();
@@ -29,7 +32,7 @@ class ForgetPassword extends Component{
 
     handleSubmit(event) {
         event.preventDefault();
-
+        let {dictionary} = this.context;
         let valid = true;
         if (this.state.email === ''){
             valid = false;
@@ -47,9 +50,9 @@ class ForgetPassword extends Component{
         if(valid === true){
 
             const email = Object.assign({}, {email: this.state.email});
-            console.log(email);
+
             forgetPassword(email).then(response => {
-                console.log("Email sent");
+                Alert.success(dictionary["forgetPasswordAlert"]+this.state.email);
                 this.props.history.push("/");
             }).catch(error => {
                 console.log(error.message);

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router";
-import {checkTokenResetPassword, resetPassword} from "../Assets/APIutils";
+import {changePassword, checkTokenResetPassword, resetPassword} from "../Assets/APIutils";
 import Alert from "react-s-alert";
 import {LanguageContext, Text} from "../Assets/Languages/Language";
+import {BackButton} from "../Assets/BackButton";
 
 
-class ResetPassword extends Component{
+class ChangePassword extends Component{
 
 
     static contextType = LanguageContext;
@@ -16,9 +17,7 @@ class ResetPassword extends Component{
         this.state = {
             password1: '',
             password2: '',
-            error: '',
-            token: '',
-            valid: false
+            error: ''
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,22 +34,6 @@ class ResetPassword extends Component{
         });
     }
 
-
-    UNSAFE_componentWillMount()
-     {
-        const token = {token: this.props.match.params.token};
-
-
-        const checkTokenRequest = Object.assign({}, token);
-        checkTokenResetPassword(checkTokenRequest).then(response => {
-            this.setState(state => ({valid: true}));
-        }).catch(error => {
-            console.log(error.message);
-            this.props.history.push("/error");
-        });
-
-    }
-
     handleSubmit(event) {
         event.preventDefault();
         let {dictionary} = this.context;
@@ -59,12 +42,12 @@ class ResetPassword extends Component{
 
             this.setState({error: "Passwords don't match"});
         }
-       else{
+        else{
             this.setState({error: ""});
             const passwordObject = Object.assign({}, {password: this.state.password1});
-            resetPassword(passwordObject,this.props.match.params.token).then(response => {
+            changePassword(passwordObject).then(response => {
                 Alert.success(dictionary["changePasswordAlert"]);
-                this.props.history.push("/login");
+                this.props.history.push("/home");
             }).catch(error => {
                 console.log(error.message);
 
@@ -79,6 +62,9 @@ class ResetPassword extends Component{
         let {dictionary} = this.context;
         return(
             <div id="content">
+                <br/>
+                <BackButton/>
+                <br/>
                 <h2 > <Text tid="resetPassword" /></h2>
                 <br/>
                 <p> <Text tid="textResetPassword" /></p>
@@ -90,7 +76,7 @@ class ResetPassword extends Component{
                     <br />
                     <br />
                     <div className="form-group">
-                        <input type="password" name="password2" value={this.state.password2} onChange={this.handleChange}  placeholder={dictionary.confirmPassword}  required />
+                        <input type="password" name="password2" value={this.state.password2} onChange={this.handleChange} placeholder={dictionary.confirmPassword}    required />
                     </div >
                     <br/>
                     <br />
@@ -106,4 +92,4 @@ class ResetPassword extends Component{
 
 }
 
-export default ResetPassword;
+export default ChangePassword;

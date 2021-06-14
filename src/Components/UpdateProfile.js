@@ -6,7 +6,7 @@ import {UpdateProfileRequest} from '../Assets/APIutils';
 import PhoneInput, {isValidPhoneNumber} from "react-phone-number-input";
 import validator from "validator";
 import {LanguageContext, Text} from "../Assets/Languages/Language";
-
+import Alert from "react-s-alert";
 
 class UpdateProfile extends Component{
 
@@ -21,9 +21,6 @@ class UpdateProfile extends Component{
             phoneNumber: '',
             gender: '',
             dateOfBirth: '',
-            university: '',
-            fieldOfStudy: '',
-            yearGraduation: '',
             errors: {}
         };
 
@@ -40,9 +37,6 @@ class UpdateProfile extends Component{
             phoneNumber: this.props.currentUser.phoneNumber,
             gender: this.props.currentUser.gender,
             dateOfBirth: this.props.currentUser.dateOfBirth,
-            fieldOfStudy: this.props.currentUser.fieldOfStudy,
-            university: this.props.currentUser.university,
-            yearGraduation: this.props.currentUser.yearGraduation,
             errors: {}
         });
     }
@@ -80,23 +74,20 @@ class UpdateProfile extends Component{
                 gender: this.state["gender"],
                 dateOfBirth: this.state["dateOfBirth"],
                 address: this.state["address"],
-                phoneNumber: this.state["phone"],
-                fieldOfStudy: this.state["fieldOfStudy"],
-                university: this.state["university"],
-                yearGraduation: this.state["yearGraduation"]
+                phoneNumber: this.state["phone"]
             };
-            console.log(updateForm);
-           // const updateRequest = Object.assign({}, updateForm);
+
+            let { dictionary } = this.context;
             UpdateProfileRequest(updateForm).then(response => {
+
                 this.props.history.push("/profile");
+                Alert.success(dictionary["profileUpdateAlert"]);
                 this.props.refresh();
             }).catch(error => {
                 this.setState({error: error.message});
                 console.log(error.message);
             });
         }
-
-
 
     }
 
@@ -124,6 +115,7 @@ class UpdateProfile extends Component{
     handleValidation(){
         let fields = this.state;
         let errors = {};
+        let { dictionary } = this.context;
         let formIsValid = true;
 
         if(!fields["name"]){
@@ -131,12 +123,7 @@ class UpdateProfile extends Component{
             errors["name"] = "This field must not be empty";
         }
 
-        if(typeof fields["name"] !== "undefined" && fields["name"].length>0){
-            if(!fields["name"].match(/^[a-zA-Z]+$/)){
-                formIsValid = false;
-                errors["name"] = "Only letters";
-            }
-        }
+
 
         if(!fields["surname"]){
             formIsValid = false;
@@ -144,12 +131,6 @@ class UpdateProfile extends Component{
 
         }
 
-        if(typeof fields["surname"] !== "undefined" && fields["surname"].length>0){
-            if(!fields["surname"].match(/^[a-zA-Z]+$/)){
-                formIsValid = false;
-                errors["surname"] = "Only letters";
-            }
-        }
 
         if(!fields["dateOfBirth"]){
             formIsValid = false;
@@ -159,7 +140,7 @@ class UpdateProfile extends Component{
         if(typeof fields["dateOfBirth"] !== "undefined"){
             if(!validator.isDate(fields["dateOfBirth"],'DD/MM/YYYY')){
                 formIsValid = false;
-                errors["dateOfBirth"] = "Invalid Date of Birth";
+                errors["dateOfBirth"] = dictionary.errorDateOfBirth;
             }
         }
 
@@ -176,7 +157,7 @@ class UpdateProfile extends Component{
         if(typeof fields["phone"] !== "undefined"){
             if(!isValidPhoneNumber(fields["phone"])){
                 formIsValid = false;
-                errors["phone"] = "Phone is not valid";
+                errors["phone"] = dictionary.errorPhone;
             }
         }
 
@@ -248,26 +229,6 @@ class UpdateProfile extends Component{
                                 <input  type="text" size="50" name="address" value={this.state.address}
                                         placeholder={dictionary.street+', '+dictionary.number+', '+dictionary.city+', '+dictionary.zipCode+', '+dictionary.country}
                                         onChange={this.handleChange}  required />
-
-                            </div>
-
-                            <div className="form-group">
-                                <label  htmlFor="name"><Text tid="university" /></label>
-                                <input  size="50" type="text" name="university" value={this.state.university}
-                                        onChange={this.handleChange} placeholder = {dictionary.universityEx} required />
-                            </div>
-
-                            <div className="form-group">
-                                <label  htmlFor="name"><Text tid="fieldOfStudy" /></label>
-                                <input  size="50" type="text" name="fieldOfStudy" value={this.state.fieldOfStudy}
-                                        onChange={this.handleChange} placeholder = {dictionary.fieldOfStudyEx} required />
-
-                            </div>
-
-                            <div className="form-group">
-                                <label  htmlFor="name"><Text tid="yearGraduation" /></label>
-                                <input  size="50" type="text" name="yearGraduation" value={this.state.yearGraduation}
-                                        onChange={this.handleChange} placeholder ={dictionary.year}  />
 
                             </div>
 

@@ -6,6 +6,7 @@ import Alert from 'react-s-alert';
 
 import validator from 'validator'
 import {LanguageContext, Text} from "../Assets/Languages/Language";
+import {NavLink} from "react-router-dom";
 
 class Register extends Component{
 
@@ -48,6 +49,7 @@ class Register extends Component{
 
     handleSubmit(e) {
 
+        let {dictionary} = this.context;
         e.preventDefault();
 
         if(this.handleValidation()) {
@@ -60,22 +62,18 @@ class Register extends Component{
                 gender: this.state.fields["gender"],
                 dateOfBirth: this.state.fields["dateOfBirth"],
                 address: this.state.fields["address"],
-                fieldOfStudy: this.state.fields["fieldOfStudy"],
-                university: this.state.fields["university"],
-                yearGraduation: this.state.fields["yearGraduation"],
                 phoneNumber: this.state.fields["phone"]
             };
 
-            console.log(signupForm);
             const signupRequest = Object.assign({}, signupForm);
             signup(signupRequest).then(response => {
-                console.log("You're successfully registered");
+                Alert.success(dictionary["registerAlert"]);
                 this.props.history.push("/login");
             }).catch(error => {
                 let errors = {};
-                errors["email"] = error.message;
+                errors["email"] = dictionary.emailAlreadyExists;
                 this.setState({errors: errors});
-                Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+                Alert.error(dictionary.emailAlreadyExists);
             });
         }
 
@@ -89,7 +87,6 @@ class Register extends Component{
                 let val = this.state.fields["dateOfBirth"];
                 if(val.length === 3 || val.length === 6) {
                     val = val.slice(0, val.length-1);
-                    console.log(val);
                     let fields = this.state.fields;
                     fields["dateOfBirth"] = val;
                     this.setState({fields});
@@ -103,18 +100,13 @@ class Register extends Component{
         let fields = this.state.fields;
         let errors = {};
         let formIsValid = true;
+        let { dictionary } = this.context;
 
         if(!fields["name"]){
             formIsValid = false;
             errors["name"] = "This field must not be empty";
         }
 
-        if(typeof fields["name"] !== "undefined" && fields["name"].length>0){
-            if(!fields["name"].match(/^[a-zA-Z]+$/)){
-                formIsValid = false;
-                errors["name"] = "Only letters";
-            }
-        }
 
         if(!fields["surname"]){
             formIsValid = false;
@@ -122,12 +114,6 @@ class Register extends Component{
 
         }
 
-        if(typeof fields["surname"] !== "undefined" && fields["surname"].length>0){
-            if(!fields["surname"].match(/^[a-zA-Z]+$/)){
-                formIsValid = false;
-                errors["surname"] = "Only letters";
-            }
-        }
 
         if(!fields["email"]){
             formIsValid = false;
@@ -137,7 +123,7 @@ class Register extends Component{
 
             if(!fields["email"].match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
                 formIsValid = false;
-                errors["email"] = "Email not valid";
+                errors["email"] = dictionary.errorEmail;
             }
         }
 
@@ -152,7 +138,7 @@ class Register extends Component{
         if(typeof fields["password1"] !=="undefined" && typeof fields["password2"] !=="undefined"){
             if(fields["password1"] !== fields["password2"] ){
                 formIsValid = false;
-                errors["password1"]= "Passwords don't match";
+                errors["password1"]= dictionary.errorPassword;
             }
         }
 
@@ -164,7 +150,7 @@ class Register extends Component{
         if(typeof fields["dateOfBirth"] !== "undefined"){
             if(!validator.isDate(fields["dateOfBirth"],'DD/MM/YYYY')){
                 formIsValid = false;
-                errors["dateOfBirth"] = "Invalid Date of Birth";
+                errors["dateOfBirth"] = dictionary.errorDateOfBirth;
             }
         }
 
@@ -181,7 +167,7 @@ class Register extends Component{
         if(typeof fields["phone"] !== "undefined"){
             if(!isValidPhoneNumber(fields["phone"])){
                 formIsValid = false;
-                errors["phone"] = "Phone is not valid";
+                errors["phone"] = dictionary.errorPhone;
             }
         }
 
@@ -284,26 +270,6 @@ handleChangePhone = (phone) =>
                                     <input  type="text" size="50" name="address" value={this.state.fields["address"]}
                                            onChange={this.handleChange} placeholder = {dictionary.street+', '+dictionary.number+', '+dictionary.city+', '+dictionary.zipCode+', '+dictionary.country} required />
                                     <span style={{color: "red"}}>{this.state.errors["address"]}</span>
-                                </div>
-
-                                <div className="form-group">
-                                    <label  htmlFor="name"><Text tid="university" /></label>
-                                    <input  size="50" type="text" name="university" value={this.state.fields["university"]}
-                                            onChange={this.handleChange} placeholder = {dictionary.universityEx} required />
-                                </div>
-
-                                <div className="form-group">
-                                    <label  htmlFor="name"><Text tid="fieldOfStudy" /></label>
-                                    <input  size="50" type="text" name="fieldOfStudy" value={this.state.fields["fieldOfStudy"]}
-                                            onChange={this.handleChange} placeholder = {dictionary.fieldOfStudyEx} required />
-
-                                </div>
-
-                                <div className="form-group">
-                                    <label  htmlFor="name"><Text tid="yearGraduation" /></label>
-                                    <input  size="50" type="text" name="yearGraduation" value={this.state.fields["yearGraduation"]}
-                                            onChange={this.handleChange} placeholder ={dictionary.year}  />
-
                                 </div>
 
                                 <br/>

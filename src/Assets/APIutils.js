@@ -135,6 +135,16 @@ export function loginAxios(loginRequest) {
     });
 }
 
+export function requestMembership() {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxios({
+        url: API_BASE_URL + "/membership/request",
+        method: "GET"
+    })
+}
 
 export function uploadFile(formData, type) {
 
@@ -149,14 +159,28 @@ export function uploadFile(formData, type) {
             body: formData
         });
     }
-    else {
+    else if (type === "diploma"){
         return requestAxiosFile({
-            url: API_BASE_URL + "/documents/add",
+            url: API_BASE_URL + "/documents/addDiploma",
+            method: 'POST',
+            body: formData
+        });
+    }
+    else if (type === "membership") {
+        return requestAxiosFile({
+            url: API_BASE_URL + "/documents/addMembership",
             method: 'POST',
             body: formData
         });
     }
 
+    else {
+        return requestAxiosFile({
+            url: API_BASE_URL + "/membership/accept/"+type,
+            method: 'POST',
+            body: formData
+        });
+    }
 }
 
 export function UpdateProfileRequest(updateRequest) {
@@ -171,6 +195,26 @@ export function UpdateProfileRequest(updateRequest) {
     });
 }
 
+export function getDocument(id) {
+
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return axios({
+        method: 'GET',
+        url: API_BASE_URL + "/documents/"+id,
+        responseType: 'blob', 
+        headers: {'Content-Type': 'application/json',
+            'Authorization':  'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+        }
+    }).then((response) =>
+    {
+        return response.data;
+    }, (error) => {
+        return  Promise.reject(error);
+    } );
+}
+
 export function GeneratePDF() {
 
     if(!localStorage.getItem(ACCESS_TOKEN)) {
@@ -180,7 +224,7 @@ export function GeneratePDF() {
 
     return axios({
         method: 'GET',
-        url: API_BASE_URL + "/users/generatepdf",
+        url: API_BASE_URL + "/membership/generatepdf",
         responseType: 'blob',
         headers: {'Content-Type': 'application/json',
             'Authorization':  'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
@@ -201,8 +245,143 @@ export function getAllUsers() {
     }
 
     return requestAxios({
-        url: API_BASE_URL + "/users/",
+        url: API_BASE_URL + "/users/all",
         method: 'GET'
+    });
+}
+
+export function getRequests() {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxios({
+        url: API_BASE_URL + "/users/requests",
+        method: 'GET'
+    });
+}
+
+export function sendMembershipDecision(membershipDecision) {
+
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+
+    return axios({
+        method: 'POST',
+        data: membershipDecision,
+        url: API_BASE_URL + "/membership/preAccept",
+        responseType: 'blob',
+        headers: {'Content-Type': 'application/json',
+            'Authorization':  'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+        }
+    })
+        .then((response) =>
+        {
+            return response.data;
+        }, (error) => {
+            return  Promise.reject(error);
+        } );
+
+}
+
+export function rejectRequest(membershipDecision) {
+
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+
+    return requestAxios({
+        url: API_BASE_URL + "/membership/reject",
+        method: 'POST',
+        body: membershipDecision
+    });
+}
+
+export function uploadMembershipInformation(membershipInformationForm) {
+
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/membership/uploadForm",
+        method: 'POST',
+        body: membershipInformationForm
+    });
+
+}
+
+export function getUserDocuments(id, requestBody){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/documents/user/"+ id,
+        method: 'POST',
+        body: requestBody
+    });
+}
+
+export function getMembership() {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/membership/",
+        method: "GET"
+    });
+
+}
+
+export function getDocumentByType(documentType) {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return axios({
+        method: 'GET',
+        url: API_BASE_URL + "/documents/type/"+documentType,
+        responseType: 'blob',
+        headers: {'Content-Type': 'application/json',
+            'Authorization':  'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+        }
+    }).then((response) =>
+    {
+        return response.data;
+    }, (error) => {
+        return  Promise.reject(error);
+    } );
+}
+
+export function changePassword(password) {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/users/password",
+        method: "POST",
+        body: password
+    });
+}
+
+export function changeEmail(email) {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/users/email",
+        method: "POST",
+        body: email
+    });
+}
+
+export function canMakeRequest() {
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return requestAxios({
+        url: API_BASE_URL + "/membership/exist",
+        method: "GET"
     });
 }
 
@@ -215,7 +394,7 @@ const requestAxiosFile = (options) => {
     if(localStorage.getItem(ACCESS_TOKEN)) {
         headers2['Authorization'] = 'Bearer ' + localStorage.getItem(ACCESS_TOKEN);
     }
-    console.log(options);
+
     return axios({
         method: options.method,
         url: options.url,

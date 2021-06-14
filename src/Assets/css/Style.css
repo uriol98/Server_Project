@@ -32,12 +32,10 @@ body {
 }
 
 #header {
-    height: 120px;
+    height: 80px;
     width: 100%;
     right: 0;
     background: white;
-    border-bottom: 1px solid #ccc;
-    border-top: 5px solid #61dafb;
 }
 
 .center{
@@ -121,6 +119,8 @@ body {
     text-align: center;
 }
 
+
+
 .btn-white{
     display: block;
     background: white;
@@ -159,6 +159,14 @@ body {
     width: 70%;
     float:left;
     min-height: 650px;
+    margin-right: 20px;
+}
+
+#uploadForm{
+    width: 70%;
+    min-height: 100px;
+    max-height: 200px;
+    float: left;
     margin-right: 20px;
 }
 

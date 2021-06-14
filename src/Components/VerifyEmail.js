@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter } from "react-router";
-import {checkTokenResetPassword, verifyEmail} from "../Assets/APIutils";
+import { verifyEmail} from "../Assets/APIutils";
 import {Text} from "../Assets/Languages/Language";
 
 class VerifyEmail extends Component{
@@ -8,7 +7,6 @@ class VerifyEmail extends Component{
     componentDidMount()
     {
         const token = this.props.match.params.token;
-        console.log(token);
         verifyEmail(token).then(response => {
 
         }).catch(error => {
