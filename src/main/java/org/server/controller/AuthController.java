@@ -76,7 +76,7 @@ public class AuthController {
     public ResponseEntity<?> sendEmailResetPassword(@Valid @RequestBody  Email email){
 
         String token = userService.generateResetToken(email.email);
-        emailService.sendSimpleMessageResetPassword("oriol1998@gmail.com","test",token);
+        emailService.sendSimpleMessageResetPassword("oriol1998@gmail.com","Zresetuj hasło",token);
         return ResponseEntity.ok("Message sent to you email account succesfully and the token is:"+token);
     }
 
