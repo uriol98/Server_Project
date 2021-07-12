@@ -25,8 +25,8 @@ app:
 mail:
   host: smtp.gmail.com
   port: 587
-  username: uri2235@gmail.com
-  password: oriol98_6cst
+  username: example@gmail.com
+  password: password
   protocol: smtp
   tls: true
   properties.mail.smtp:
